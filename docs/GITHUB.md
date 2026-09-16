@@ -1,84 +1,121 @@
-# GitHub: passo a passo do LinguaWiki
+# LinguaWiki GitHub Workflow
 
-O repositório público é:
+The public repository is:
 https://github.com/estatisticomoura/LinguaWiki
 
-## 1. Entender as três áreas principais
+English is the canonical language for repository documentation, metadata,
+commit messages, issues, pull requests, release notes, and other public project
+communication. Dictionary entries and localized application resources remain
+in their respective target languages.
 
-- **Code**: código-fonte e documentação;
-- **Actions**: compilação e testes automáticos a cada envio;
-- **Releases**: arquivos grandes que as pessoas baixam, como APK e pacote de
-  dicionário.
+## 1. Main repository areas
 
-O banco de 39,6 MB não deve ser colocado como arquivo comum no histórico Git.
-Ele fica como anexo de Release.
+- **Code** contains source code and documentation.
+- **Actions** runs automated builds and tests after each update.
+- **Releases** distributes large files such as APKs and dictionary packages.
 
-## 2. Conferir uma atualização
+The 39.6 MB compressed dictionary must not be committed to Git history. Attach
+it to a Release instead.
 
-1. Abra o repositório.
-2. Clique em **Actions**.
-3. Abra a execução mais recente chamada **Android CI**.
-4. Espere todos os passos ficarem verdes.
-5. Se quiser o APK produzido automaticamente, abra a execução e baixe o
-   artefato **LinguaWiki-debug-apk** no fim da página.
+## 2. Check an update
 
-O artefato de Actions é temporário. Para oferecer uma versão pública estável,
-use um Release.
+1. Open the repository.
+2. Select **Actions**.
+3. Open the latest **Android CI** run.
+4. Wait until every step is green.
+5. To download the automatically built APK, open the run and download the
+   **LinguaWiki-debug-apk** artifact near the bottom of the page.
 
-## 3. Criar o Release `v0.4.0-prototype`
+GitHub Actions artifacts are temporary. Use a Release for a stable public
+download.
 
-1. Na página do repositório, clique em **Releases**.
-2. Clique em **Draft a new release**.
-3. Em **Choose a tag**, escreva `v0.4.0-prototype`.
-4. Selecione **Create new tag: v0.4.0-prototype on publish**.
-5. Confirme que o alvo é a ramificação `main`.
-6. Em **Release title**, escreva `LinguaWiki 0.4.0 prototype`.
-7. Marque **Set as a pre-release**, porque ainda é uma versão de teste.
-8. Arraste para a caixa de anexos estes quatro arquivos, sem alterar os nomes:
+## 3. Create Release `v0.4.0-prototype`
+
+1. Open **Releases** on the repository page.
+2. Select **Draft a new release**.
+3. Under **Choose a tag**, enter `v0.4.0-prototype`.
+4. Select **Create new tag: v0.4.0-prototype on publish**.
+5. Confirm that the target branch is `main`.
+6. Set the release title to `LinguaWiki 0.4.0 prototype`.
+7. Paste the English release notes provided below.
+8. Select **Set as a pre-release** because this build is still experimental.
+9. Attach these four files without changing their names:
 
    - `LinguaWiki-prototype-0.4.0-debug.apk`
    - `linguawiki-pt-pt-2026-09-02.sqlite.gz`
    - `pt-pt-2026-09-02.json`
    - `NOTICE-DATA.md`
 
-9. Espere cada barra de upload terminar.
-10. Clique em **Publish release**.
+10. Wait for every upload to finish.
+11. Select **Publish release**.
 
-Esse nome de tag é importante: o catálogo do APK aponta exatamente para o URL
-gerado por esse Release.
+The tag and dictionary filename are part of the URL bundled with the APK. A
+different tag or filename will break in-app package downloads.
 
-## 4. Testar o download no celular
+### Release notes for `v0.4.0-prototype`
 
-1. Abra o Release pelo navegador do celular.
-2. Baixe e instale o APK.
-3. Abra **Configurações → Dicionários offline** no app.
-4. Confirme o download de português.
-5. Se aparecer “arquivo inválido”, confira se o anexo mantém o nome exato e se
-   foi enviado ao Release da tag correta.
+```markdown
+First public LinguaWiki prototype with downloadable monolingual dictionary
+packages.
 
-## 5. Fazer uma alteração pelo site
+## Highlights
 
-Para editar somente um texto pequeno:
+- Portuguese–Portuguese offline dictionary downloaded on demand
+- search by lemma or inflected form
+- ambiguous-form support: `fui` resolves to both `ir` and `ser`
+- diacritic-insensitive matching: `coracoes` finds `coração`
+- definitions, examples, etymology, IPA, translations, and inflection data
+- resumable download with SHA-256 and SQLite integrity verification
+- atomic package installation and independent removal
+- configurable font size, line spacing, color palette, and high contrast
 
-1. abra o arquivo na aba **Code**;
-2. clique no lápis **Edit this file**;
-3. faça a mudança;
-4. clique em **Commit changes**;
-5. escreva uma descrição curta;
-6. escolha criar uma nova ramificação e Pull Request quando a alteração for de
-   código; para uma correção documental simples, um commit direto em `main`
-   também funciona.
+## Portuguese package
 
-Antes de mesclar mudanças de código, confirme que o **Android CI** ficou verde.
+- 93,848 entries
+- 151,369 senses
+- 417,989 translations
+- 449,746 indexed forms
+- 39.6 MB compressed download
+- 120.8 MB installed
 
-## 6. Versões futuras
+This is an experimental build signed with a development key. Dictionary data
+is derived from the Portuguese Wiktionary and distributed under CC BY-SA 4.0.
+See `NOTICE-DATA.md` for source details, attribution, checksums, and declared
+transformations.
+```
 
-Cada pacote deve usar uma URL imutável, com tag e versão dos dados. Ao atualizar
-o Wiktionary:
+## 4. Verify the published download
 
-1. gere um novo pacote e manifesto;
-2. execute testes e verifique hashes;
-3. atualize o catálogo do aplicativo;
-4. aumente `versionCode` e `versionName`;
-5. crie uma nova tag e um novo Release;
-6. nunca substitua silenciosamente o arquivo de uma versão antiga.
+1. Open the Release in a phone browser.
+2. Download and install the APK.
+3. In the app, open **Settings → Offline dictionaries**. The label may appear
+   translated according to the device language.
+4. Download **Portuguese**.
+5. If the app reports an invalid file, verify that the asset name is unchanged
+   and that it was attached to the Release with the correct tag.
+
+## 5. Make a small edit on GitHub
+
+For a documentation-only edit:
+
+1. open the file under **Code**;
+2. select the pencil icon, **Edit this file**;
+3. make the change in English;
+4. select **Commit changes**;
+5. write a short English commit message;
+6. use a new branch and pull request for code changes. A direct commit to
+   `main` is acceptable for a minor documentation correction.
+
+Before merging code changes, confirm that **Android CI** is green.
+
+## 6. Publish future versions
+
+Every package must use an immutable URL containing its data version and Release
+tag. When updating data from Wiktionary:
+
+1. generate a new package and manifest;
+2. run tests and verify checksums;
+3. update the app catalog;
+4. increment `versionCode` and `versionName`;
+5. create a new tag and Release with English release notes;
+6. never replace an older version's asset silently.

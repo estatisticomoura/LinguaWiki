@@ -1,99 +1,111 @@
-# LinguaWiki — dicionários offline e Wiktionary online
+# LinguaWiki — offline dictionaries and online Wiktionary
 
-LinguaWiki é um aplicativo Android de dicionários sem conta, anúncios,
-telemetria ou rastreamento. A interface segue o idioma do aparelho e está
-traduzida para português, italiano e inglês.
+LinguaWiki is an Android dictionary app with no account requirement, ads,
+telemetry, or tracking. Its interface follows the device language and is
+currently localized in English, Italian, and Portuguese.
 
-A versão `0.4.0-prototype` introduz o primeiro pacote monolíngue real,
-português–português, baixado sob demanda. O APK continua pequeno: o acervo não
-fica preso ao instalador.
+Version `0.4.0-prototype` introduces the first complete downloadable
+monolingual package: Portuguese words defined in Portuguese. Dictionary data is
+downloaded on demand, so the APK remains small and each language can be
+installed or removed independently.
 
-## O que funciona
+English is the canonical language for project documentation, repository
+metadata, release notes, and public project communication. Dictionary content
+and localized app strings remain in their respective languages.
 
-- busca offline incremental por lema e forma flexionada;
-- busca sem diacríticos e correção aproximada;
-- formas ambíguas preservadas (`fui` encontra `ir` e `ser`);
-- definições, exemplos, IPA, etimologia e traduções por acepção;
-- botão de conjugação ou declinação;
-- pronúncia pelo TTS instalado no Android;
-- favoritos e histórico locais, inclusive para verbetes de pacotes externos;
-- download retomável, verificação SHA-256, validação SQLite e instalação
-  atômica;
-- remoção individual de pacotes sem apagar favoritos nem histórico;
-- consulta online a 173 edições ativas do Wiktionary;
-- sugestões online por prefixo, busca aproximada e variantes com diacríticos;
-- temas claro, escuro, do sistema e alto contraste;
-- paletas verde, azul e âmbar;
-- cinco tamanhos de fonte e três opções de entrelinha.
+## Current features
 
-## Pacote português–português
+- incremental offline search by lemma and inflected form;
+- diacritic-insensitive and approximate matching;
+- preservation of ambiguous forms (`fui` resolves to both `ir` and `ser`);
+- definitions, examples, International Phonetic Alphabet (IPA), etymology, and
+  sense-level translations;
+- conjugation and declension views;
+- pronunciation through the Android text-to-speech engine;
+- local favorites and history, including entries from downloaded packages;
+- resumable downloads, SHA-256 verification, SQLite validation, and atomic
+  installation;
+- independent package removal without deleting favorites or history;
+- online lookup across 173 active Wiktionary editions;
+- online suggestions using prefix search, approximate search, and diacritic
+  variants;
+- system, light, dark, and high-contrast themes;
+- green, blue, and amber color palettes;
+- five font sizes and three line-spacing options.
 
-O primeiro pacote foi criado da extração do Wiktionary em português publicada
-por Wiktextract/Kaikki.org em 2 de setembro de 2026.
+## Portuguese–Portuguese package
 
-| Medida | Valor |
+The first package was built from the Portuguese Wiktionary extraction
+published by Wiktextract/Kaikki.org on September 2, 2026.
+
+| Metric | Value |
 |---|---:|
-| Download comprimido | 39.590.052 bytes (37,8 MiB) |
-| Banco instalado | 120.827.904 bytes (115,2 MiB) |
-| Verbetes | 93.848 |
-| Acepções | 151.369 |
-| Traduções | 417.989 |
-| Formas indexadas | 449.746 |
+| Compressed download | 39,590,052 bytes (37.8 MiB) |
+| Installed database | 120,827,904 bytes (115.2 MiB) |
+| Entries | 93,848 |
+| Senses | 151,369 |
+| Translations | 417,989 |
+| Indexed forms | 449,746 |
 
-O pacote contém palavras portuguesas explicadas em português. Traduções simples
-para outros idiomas, exemplos, IPA, etimologia e flexões são preservados quando
-existem na fonte. Registros que representam somente uma forma flexionada são
-ligados ao lema e não duplicam uma página inteira.
+The package contains Portuguese headwords with definitions in Portuguese.
+Simple translations into other languages, examples, IPA, etymology, and
+inflection data are retained whenever they are available in the source.
+Form-only records point to their lemmas instead of duplicating complete entry
+pages.
 
-O arquivo não é versionado no Git porque é grande. Ele deve ser anexado ao
-Release `v0.4.0-prototype` com o nome
-`linguawiki-pt-pt-2026-09-02.sqlite.gz`; o catálogo incorporado ao APK aponta
-para esse endereço versionado.
+The package is not stored in Git because of its size. It must be attached to
+Release `v0.4.0-prototype` as
+`linguawiki-pt-pt-2026-09-02.sqlite.gz`. The catalog bundled with the APK points
+to that immutable release URL.
 
-## Instalar e testar
+## Install and test
 
-1. No Release `v0.4.0-prototype`, baixe
-   `LinguaWiki-prototype-0.4.0-debug.apk`.
-2. Abra o APK no Android e autorize a instalação por essa origem, se solicitado.
-3. No LinguaWiki, abra **Configurações → Dicionários offline**.
-4. Confira download, tamanho instalado, espaço temporário e espaço livre.
-5. Confirme o download de **Português**.
-6. Volte à busca, selecione português e experimente:
+1. Download `LinguaWiki-prototype-0.4.0-debug.apk` from Release
+   `v0.4.0-prototype`.
+2. Open the APK on Android and allow installation from that source if Android
+   asks for permission.
+3. In LinguaWiki, open **Settings → Offline dictionaries**. Labels are
+   localized according to the device language.
+4. Review the download size, installed size, temporary-space requirement, and
+   currently available storage.
+5. Download **Portuguese**.
+6. Return to search, select Portuguese, and try the following queries:
 
-| Digite | Resultado esperado |
+| Query | Expected result |
 |---|---|
-| `poder` | verbetes e acepções de “poder” |
-| `pudesse` | forma destacada conduzindo ao lema “poder” |
-| `fui` | lemas “ir” e “ser” |
-| `coracoes` | “coração”/“corações” mesmo sem diacríticos |
-| `fazer` | definições, exemplos, etimologia, traduções e conjugação |
+| `poder` | entries and senses for the lemma `poder` |
+| `pudesse` | the searched form highlighted and linked to `poder` |
+| `fui` | both `ir` and `ser` |
+| `coracoes` | `coração` or `corações`, despite the missing diacritic |
+| `fazer` | definitions, examples, etymology, translations, and conjugation |
 
-O APK é assinado com uma chave de desenvolvimento. Ele serve para teste direto
-e não é a assinatura definitiva de publicação na Play Store.
+The prototype APK is signed with a development key. It is intended for direct
+testing and is not signed for final Google Play distribution.
 
-## Consulta online
+## Online lookup
 
-Em **Configurações → Edições online**, escolha quais Wiktionaries podem aparecer
-na tela online. Somente a edição ativa recebe o texto digitado para gerar
-sugestões. O cliente tenta novamente uma vez em falhas transitórias, guarda um
-pequeno cache em memória e mostra um botão explícito para repetir a consulta.
+Under **Settings → Online editions**, choose which Wiktionary editions may
+appear in online search. Only the active edition receives the current query for
+suggestion generation. The client retries once after a transient failure,
+keeps a small in-memory cache, and exposes an explicit retry action.
 
-O conteúdo da página é exibido diretamente pelo site oficial da edição
-selecionada. JavaScript e armazenamento DOM ficam desativados no `WebView`.
+Entry pages are displayed directly from the official website of the selected
+edition. JavaScript and DOM storage are disabled in the Android `WebView`.
 
-## Compilar o aplicativo
+## Build the Android app
 
-Requisitos: JDK 17 e Android SDK com a plataforma 35.
+Requirements: JDK 17 and the Android SDK with platform 35.
 
 ```bash
 ./gradlew testDebugUnitTest assembleDebug lintDebug
 ```
 
-O APK será criado em `app/build/outputs/apk/debug/app-debug.apk`.
+The APK is written to `app/build/outputs/apk/debug/app-debug.apk`.
 
-## Gerar novamente o pacote
+## Rebuild the dictionary package
 
-O gerador recebe a extração JSONL compactada e produz SQLite, gzip e manifesto:
+The package builder reads a compressed JSON Lines extraction and produces the
+SQLite database, gzip archive, and manifest:
 
 ```bash
 python3 tools/build_dictionary_pack.py \
@@ -110,20 +122,21 @@ python3 tools/build_dictionary_pack.py \
   --source-sha256 9c333f933157afa21234d4ffd4a6b8fe6eb61b279f6a5debd1d43b612faa8d16
 ```
 
-Depois da geração, confira o `PRAGMA integrity_check`, os totais do manifesto e
-consultas de regressão antes de publicar. O desenho técnico completo está em
-[`docs/OFFLINE-PACKS.md`](docs/OFFLINE-PACKS.md).
+After generation, verify `PRAGMA integrity_check`, the manifest totals, and the
+regression queries before publishing. See
+[`docs/OFFLINE-PACKS.md`](docs/OFFLINE-PACKS.md) for the complete technical
+design.
 
-## GitHub para iniciantes
+## Repository and release workflow
 
-O procedimento de commit, Actions e criação do Release está descrito passo a
-passo em [`docs/GITHUB.md`](docs/GITHUB.md).
+Commit, GitHub Actions, and Release procedures are documented step by step in
+[`docs/GITHUB.md`](docs/GITHUB.md).
 
-## Licenças
+## Licenses and attribution
 
-- código do aplicativo: MIT (`LICENSE`);
-- amostras internas de demonstração: escritas para o protótipo;
-- pacote português: CC BY-SA 4.0, com atribuição aos colaboradores do
-  Wiktionary em português e registro das transformações realizadas.
+- application source code: MIT (`LICENSE`);
+- embedded demonstration entries: original prototype content;
+- Portuguese dictionary package: CC BY-SA 4.0, with attribution to Portuguese
+  Wiktionary contributors and a record of the transformations performed.
 
-Consulte [`NOTICE-DATA.md`](NOTICE-DATA.md) antes de redistribuir os dados.
+Read [`NOTICE-DATA.md`](NOTICE-DATA.md) before redistributing dictionary data.

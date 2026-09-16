@@ -1,48 +1,52 @@
-# Aviso e atribuição dos dados
+# Data Notice and Attribution
 
-## Código e amostras internas
+## Application code and embedded samples
 
-O código do aplicativo está sob a licença MIT (`LICENSE`). Essa licença não se
-estende automaticamente aos pacotes de dicionário.
+The application source code is licensed under the MIT License (`LICENSE`). The
+MIT License does not automatically apply to downloadable dictionary packages.
 
-O vocabulário pequeno de `app/src/main/assets/seed_entries.json` foi escrito
-para demonstrar o protótipo; não é uma extração do Wiktionary nem do FreeDict.
+The small vocabulary in `app/src/main/assets/seed_entries.json` was written for
+prototype demonstration purposes. It is not extracted from Wiktionary or
+FreeDict.
 
-## Pacote `pt-pt`, versão `2026-09-02`
+## `pt-pt` package, version `2026-09-02`
 
-O pacote português–português é uma obra derivada de conteúdo do Wiktionary em
-português:
+The Portuguese–Portuguese package is a derivative work based on content from
+the Portuguese Wiktionary:
 
-- autoria: colaboradores do Wiktionary em português;
-- projeto: https://pt.wiktionary.org/;
-- extração estruturada: Wiktextract/Kaikki.org;
-- arquivo-fonte: https://kaikki.org/dictionary/downloads/pt/pt-extract.jsonl.gz;
-- data declarada da extração: 2 de setembro de 2026;
-- SHA-256 da fonte:
+- authorship: Portuguese Wiktionary contributors;
+- source project: https://pt.wiktionary.org/;
+- structured extraction: Wiktextract/Kaikki.org;
+- source file: https://kaikki.org/dictionary/downloads/pt/pt-extract.jsonl.gz;
+- stated extraction date: September 2, 2026;
+- source SHA-256:
   `9c333f933157afa21234d4ffd4a6b8fe6eb61b279f6a5debd1d43b612faa8d16`;
-- licença de redistribuição do pacote derivado: CC BY-SA 4.0;
-- texto da licença: https://creativecommons.org/licenses/by-sa/4.0/.
+- redistribution license for the derivative package: CC BY-SA 4.0;
+- license text: https://creativecommons.org/licenses/by-sa/4.0/.
 
-Transformações realizadas pelo LinguaWiki:
+LinguaWiki performed the following transformations:
 
-1. seleção de registros cujo idioma do verbete é português;
-2. normalização e reorganização em tabelas SQLite;
-3. associação de registros exclusivamente flexionados aos respectivos lemas;
-4. criação de chaves sem diacríticos e índices de lema, prefixo e forma;
-5. preservação, quando disponível na extração, de definições, exemplos, IPA,
-   etimologia, traduções e paradigmas flexionais;
-6. compactação determinística do banco para distribuição.
+1. selected records whose entry language is Portuguese;
+2. normalized and reorganized fields into SQLite tables;
+3. linked form-only records to their corresponding lemmas;
+4. generated diacritic-insensitive keys and indexes for lemmas, prefixes, and
+   forms;
+5. retained definitions, examples, International Phonetic Alphabet (IPA),
+   etymology, translations, and inflection paradigms when available in the
+   extraction;
+6. compressed the database deterministically for distribution.
 
-Identidade do artefato publicado:
+Published artifact identity:
 
-- `linguawiki-pt-pt-2026-09-02.sqlite.gz`;
-- tamanho: 39.590.052 bytes;
-- SHA-256:
+- file: `linguawiki-pt-pt-2026-09-02.sqlite.gz`;
+- file size: 39,590,052 bytes;
+- file SHA-256:
   `cb8dd745870c1c55f13b8af0d34cdb84a2297da6a8b27ed2a447d449cbbfbcd8`;
-- banco descompactado: 120.827.904 bytes;
-- SHA-256 do banco:
+- uncompressed database size: 120,827,904 bytes;
+- uncompressed database SHA-256:
   `bdb0550cbab742983dc5398f5f7f27d656b966d5fd30098ce2febbe704e40ac5`.
 
-Ao redistribuir uma cópia ou adaptação do pacote, preserve esta atribuição,
-indique novas modificações e cumpra os termos da CC BY-SA 4.0. Arquivos de
-áudio não fazem parte deste pacote e podem ter licenças próprias.
+When redistributing a copy or adaptation of the package, retain this
+attribution, identify any additional modifications, and comply with CC BY-SA
+4.0. Audio files are not included in this package and may be subject to their
+own licenses.

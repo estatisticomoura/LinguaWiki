@@ -1,124 +1,128 @@
-# Pacotes offline do LinguaWiki
+# LinguaWiki Offline Packages
 
-## Arquitetura adotada
+## Architecture
 
-O APK contém a interface, o mecanismo de busca e uma amostra pequena. Cada
-acervo real é um banco SQLite somente leitura, compactado e baixado sob demanda.
-O usuário pode instalar ou remover idiomas independentemente; a quantidade de
-pacotes é limitada pelo armazenamento do aparelho, não por uma lista fixa no
-código.
+The APK contains the user interface, search engine, and a small demonstration
+dataset. Each complete dictionary collection is distributed as a compressed,
+read-only SQLite database and downloaded on demand. Users may install or remove
+languages independently. Available device storage, rather than a fixed list in
+the app, is the practical limit on the number of installed packages.
 
-Cada pacote é monolíngue:
+Each package is monolingual:
 
-- palavras no idioma escolhido;
-- definições na edição correspondente do Wiktionary;
-- exemplos, IPA e etimologia quando disponíveis;
-- formas, conjugação e declinação;
-- traduções simples para outros idiomas presentes naquela edição.
+- headwords in the selected language;
+- definitions from the corresponding Wiktionary edition;
+- examples, International Phonetic Alphabet (IPA), and etymology when
+  available;
+- inflected forms, conjugations, and declensions;
+- simple translations into other languages when recorded by that edition.
 
-Uma segunda coleção completa em inglês não é duplicada dentro do pacote. Isso
-mantém o download previsível. A consulta a outras edições continua disponível
-no modo online e, futuramente, camadas de referência poderão ser pacotes
-opcionais separados.
+A second complete English collection is not duplicated inside each package.
+This keeps download sizes predictable. Other editions remain available through
+online lookup, and optional reference layers may be offered as separate
+packages in the future.
 
-## Primeiro pacote medido
+## First measured package
 
-O pacote `pt-pt` versão `2026-09-02` tem:
+Package `pt-pt`, version `2026-09-02`, has the following measured values:
 
-| Campo | Valor |
+| Field | Value |
 |---|---:|
-| `downloadBytes` | 39.590.052 |
-| `installedBytes` | 120.827.904 |
-| `entryCount` | 93.848 |
-| `senseCount` | 151.369 |
-| `translationCount` | 417.989 |
-| `formCount` | 449.746 |
+| `downloadBytes` | 39,590,052 |
+| `installedBytes` | 120,827,904 |
+| `entryCount` | 93,848 |
+| `senseCount` | 151,369 |
+| `translationCount` | 417,989 |
+| `formCount` | 449,746 |
 
-Esses valores são medidos no artefato real, não estimados a partir de um dump
-bruto.
+These values come from the actual distribution artifact; they are not
+estimates derived from a raw dump.
 
-## Produção fora do celular
+## Off-device production
 
-O telefone não interpreta dumps XML ou JSONL. A geração acontece antes da
-publicação:
+The phone does not process XML or JSON Lines dumps. Package generation takes
+place before publication:
 
-1. baixar a extração e conferir seu checksum;
-2. selecionar os registros do idioma-alvo;
-3. normalizar campos e colapsar páginas exclusivamente flexionadas;
-4. produzir um banco SQLite com índices;
-5. executar `PRAGMA integrity_check` e buscas de regressão;
-6. compactar o banco;
-7. produzir o manifesto com tamanhos, totais, URL e SHA-256;
-8. publicar arquivo e manifesto em um Release versionado.
+1. download the structured extraction and verify its checksum;
+2. select records in the target language;
+3. normalize fields and collapse form-only pages;
+4. create an indexed SQLite database;
+5. run `PRAGMA integrity_check` and regression searches;
+6. compress the database;
+7. generate the manifest with sizes, record counts, URL, and SHA-256;
+8. publish the archive and manifest in a versioned GitHub Release.
 
-O script atual é `tools/build_dictionary_pack.py`.
+The current builder is `tools/build_dictionary_pack.py`.
 
-## Formato do banco
+## Database format
 
-O esquema 1 contém:
+Schema version 1 contains:
 
-- `meta`: versão do esquema, pacote, edição, idioma e versão dos dados;
-- `entries`: lema, forma normalizada, forma sem diacríticos, classe, IPA,
-  etimologia e tipo de flexão;
-- `senses`: definição e lista JSON de exemplos;
-- `translations`: idioma e termo ligados à acepção;
-- `forms`: superfície, chaves de busca e rótulo morfológico.
+- `meta`: schema version, package, Wiktionary edition, language, and data
+  version;
+- `entries`: lemma, normalized form, diacritic-insensitive form, part of
+  speech, IPA, etymology, and inflection type;
+- `senses`: definition and a JSON list of examples;
+- `translations`: language and term linked to a sense;
+- `forms`: surface form, search keys, and morphological label.
 
-Os IDs expostos ao aplicativo têm o formato
-`pack/<packId>/<stableId>`. Favoritos e histórico guardam também uma fotografia
-dos metadados básicos, portanto não desaparecem quando o pacote é removido.
+Entry IDs exposed to the app use the format `pack/<packId>/<stableId>`.
+Favorites and history also store a snapshot of essential metadata, so they do
+not disappear when a package is removed.
 
-## Instalação segura
+## Safe installation
 
-Antes da confirmação, a interface mostra:
+Before confirmation, the app displays:
 
-- tamanho do download;
-- tamanho final instalado;
-- espaço temporário máximo;
-- espaço livre atual.
+- download size;
+- final installed size;
+- maximum temporary-space requirement;
+- currently available space.
 
-O pico exigido é:
+Peak required storage is calculated as:
 
 ```text
-downloadBytes + installedBytes + margem de 16 MiB
+downloadBytes + installedBytes + 16 MiB safety margin
 ```
 
-O fluxo implementado é:
+The implemented installation sequence is:
 
-1. continuar um arquivo parcial usando HTTP `Range` quando o servidor aceita;
-2. restringir origem e redirecionamento final a HTTPS;
-3. verificar tamanho e SHA-256 do gzip;
-4. descompactar para arquivo temporário;
-5. verificar tamanho, metadados e `PRAGMA integrity_check`;
-6. renomear a versão anterior para backup;
-7. ativar o novo banco por renomeação atômica;
-8. restaurar o backup se a ativação falhar;
-9. apagar o gzip somente depois do sucesso.
+1. resume a partial download with HTTP `Range` when the server supports it;
+2. restrict the source and final redirect destination to HTTPS;
+3. verify the gzip size and SHA-256;
+4. decompress into a temporary file;
+5. verify size, metadata, and `PRAGMA integrity_check`;
+6. rename the previous version as a backup;
+7. activate the new database with an atomic rename;
+8. restore the backup if activation fails;
+9. delete the gzip only after successful installation.
 
-Uma interrupção não substitui um dicionário instalado por um arquivo parcial.
+An interruption never replaces an installed dictionary with a partial file.
 
-## Busca
+## Search order
 
-A ordem de prioridade é:
+Search results are ranked in this order:
 
-1. lema exato;
-2. forma exata;
-3. lema ou forma equivalentes sem diacríticos;
-4. prefixo;
-5. distância de edição limitada.
+1. exact lemma;
+2. exact inflected form;
+3. diacritic-insensitive lemma or form;
+4. prefix;
+5. bounded edit distance.
 
-Resultados de formas mostram em destaque a relação entre a superfície digitada
-e o lema. Para pacotes muito maiores, a etapa aproximada deve migrar para um
-índice de trigramas ou SymSpell, evitando varredura de candidatos por tamanho.
+Results for inflected forms prominently show the relationship between the
+searched surface form and its lemma. For substantially larger packages, the
+approximate-matching stage should migrate to a trigram or SymSpell index rather
+than scanning candidates by length.
 
-## Pronúncia
+## Pronunciation
 
-O caminho padrão é o sintetizador de voz do Android, sem áudio incorporado.
-Áudio humano do Wikimedia Commons poderá ser baixado sob demanda em uma versão
-posterior, com cache removível e metadados individuais de autoria e licença.
+Android text-to-speech is the default pronunciation path; no audio is bundled
+with the dictionary package. A future version may download human recordings
+from Wikimedia Commons on demand, with removable caching and per-file
+authorship and license metadata.
 
-## Licença e procedência
+## License and provenance
 
-Os metadados completos do primeiro pacote e as transformações declaradas estão
-em `NOTICE-DATA.md`. A licença do código e a licença dos dados permanecem
-separadas.
+Complete metadata for the first package and a record of the transformations
+performed are available in `NOTICE-DATA.md`. The source-code license and data
+license remain separate.
