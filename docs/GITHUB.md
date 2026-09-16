@@ -17,7 +17,27 @@ in their respective target languages.
 The 39.6 MB compressed dictionary must not be committed to Git history. Attach
 it to a Release instead.
 
-## 2. Check an update
+## 2. Repository About metadata
+
+Keep the public **About** panel in English. Use this description:
+
+> Offline-first Android dictionary with downloadable monolingual Wiktionary
+> packages, inflection-aware search, and optional online lookup.
+
+Use these topics:
+
+- `android`
+- `dictionary`
+- `wiktionary`
+- `offline-first`
+- `linguistics`
+- `kotlin`
+- `jetpack-compose`
+
+To update the panel, open the repository, select the gear icon beside
+**About**, edit the description and topics, and select **Save changes**.
+
+## 3. Check an update
 
 1. Open the repository.
 2. Select **Actions**.
@@ -29,7 +49,7 @@ it to a Release instead.
 GitHub Actions artifacts are temporary. Use a Release for a stable public
 download.
 
-## 3. Create Release `v0.4.0-prototype`
+## 4. Create Release `v0.4.0-prototype`
 
 1. Open **Releases** on the repository page.
 2. Select **Draft a new release**.
@@ -84,7 +104,7 @@ See `NOTICE-DATA.md` for source details, attribution, checksums, and declared
 transformations.
 ```
 
-## 4. Verify the published download
+## 5. Verify the published download
 
 1. Open the Release in a phone browser.
 2. Download and install the APK.
@@ -94,7 +114,7 @@ transformations.
 5. If the app reports an invalid file, verify that the asset name is unchanged
    and that it was attached to the Release with the correct tag.
 
-## 5. Make a small edit on GitHub
+## 6. Make a small edit on GitHub
 
 For a documentation-only edit:
 
@@ -108,7 +128,7 @@ For a documentation-only edit:
 
 Before merging code changes, confirm that **Android CI** is green.
 
-## 6. Publish future versions
+## 7. Publish future versions
 
 Every package must use an immutable URL containing its data version and Release
 tag. When updating data from Wiktionary:
