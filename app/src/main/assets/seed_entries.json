@@ -1,0 +1,1072 @@
+{
+  "entries": [
+    {
+      "id": "en-run-v",
+      "language": "en",
+      "lemma": "run",
+      "partOfSpeech": "verb",
+      "ipa": "/rʌn/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "To move quickly on foot.",
+          "example": "She runs every morning.",
+          "translations": [
+            { "language": "pt", "term": "correr", "targetLemma": "correr" }
+          ]
+        },
+        {
+          "definition": "To manage or operate something.",
+          "example": "They run a small shop.",
+          "translations": [
+            { "language": "pt", "term": "administrar", "targetLemma": "administrar" },
+            { "language": "pt", "term": "gerir", "targetLemma": "gerir" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "runs", "label": "third-person singular present" },
+        { "surface": "ran", "label": "simple past" },
+        { "surface": "running", "label": "present participle" },
+        { "surface": "run", "label": "past participle" }
+      ]
+    },
+    {
+      "id": "en-house-n",
+      "language": "en",
+      "lemma": "house",
+      "partOfSpeech": "noun",
+      "ipa": "/haʊs/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "A building intended for people to live in.",
+          "example": "Their house has a small garden.",
+          "translations": [
+            { "language": "pt", "term": "casa", "targetLemma": "casa" }
+          ]
+        },
+        {
+          "definition": "A legislative assembly or one of its chambers.",
+          "example": "The proposal passed both houses.",
+          "translations": [
+            { "language": "pt", "term": "câmara", "targetLemma": "câmara" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "houses", "label": "plural" }
+      ]
+    },
+    {
+      "id": "en-love-n",
+      "language": "en",
+      "lemma": "love",
+      "partOfSpeech": "noun",
+      "ipa": "/lʌv/",
+      "etymology": "From Middle English love, from Old English lufu.",
+      "senses": [
+        {
+          "definition": "A deep feeling of affection or attachment.",
+          "example": "Their love grew over the years.",
+          "translations": [
+            { "language": "pt", "term": "amor", "targetLemma": "amor", "targetEntryId": "pt-amor-n" }
+          ]
+        }
+      ],
+      "forms": []
+    },
+    {
+      "id": "en-love-v",
+      "language": "en",
+      "lemma": "love",
+      "partOfSpeech": "verb",
+      "ipa": "/lʌv/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "To feel deep affection for someone or something.",
+          "example": "I love this book.",
+          "translations": [
+            { "language": "pt", "term": "amar", "targetLemma": "amar", "targetEntryId": "pt-amar-v" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "loves", "label": "third-person singular present" },
+        { "surface": "loved", "label": "simple past and past participle" },
+        { "surface": "loving", "label": "present participle" }
+      ]
+    },
+    {
+      "id": "en-dictionary-n",
+      "language": "en",
+      "lemma": "dictionary",
+      "partOfSpeech": "noun",
+      "ipa": "/ˈdɪkʃəˌnɛri/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "A reference work that explains words and their uses.",
+          "example": "I checked the word in a dictionary.",
+          "translations": [
+            { "language": "pt", "term": "dicionário", "targetLemma": "dicionário" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "dictionaries", "label": "plural" }
+      ]
+    },
+    {
+      "id": "en-word-n",
+      "language": "en",
+      "lemma": "word",
+      "partOfSpeech": "noun",
+      "ipa": "/wɜːd/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "A unit of language that carries meaning.",
+          "example": "This word has several meanings.",
+          "translations": [
+            { "language": "pt", "term": "palavra", "targetLemma": "palavra" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "words", "label": "plural" }
+      ]
+    },
+    {
+      "id": "en-book-n",
+      "language": "en",
+      "lemma": "book",
+      "partOfSpeech": "noun",
+      "ipa": "/bʊk/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "A written work published as a set of pages or in digital form.",
+          "example": "The book is on the table.",
+          "translations": [
+            { "language": "pt", "term": "livro", "targetLemma": "livro" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "books", "label": "plural" }
+      ]
+    },
+    {
+      "id": "en-learn-v",
+      "language": "en",
+      "lemma": "learn",
+      "partOfSpeech": "verb",
+      "ipa": "/lɜːn/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "To gain knowledge or skill through study or experience.",
+          "example": "She is learning Portuguese.",
+          "translations": [
+            { "language": "pt", "term": "aprender", "targetLemma": "aprender" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "learns", "label": "third-person singular present" },
+        { "surface": "learned", "label": "simple past and past participle" },
+        { "surface": "learnt", "label": "simple past and past participle (chiefly British)" },
+        { "surface": "learning", "label": "present participle" }
+      ]
+    },
+    {
+      "id": "en-speak-v",
+      "language": "en",
+      "lemma": "speak",
+      "partOfSpeech": "verb",
+      "ipa": "/spiːk/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "To express thoughts using the voice.",
+          "example": "Do you speak English?",
+          "translations": [
+            { "language": "pt", "term": "falar", "targetLemma": "falar" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "speaks", "label": "third-person singular present" },
+        { "surface": "spoke", "label": "simple past" },
+        { "surface": "spoken", "label": "past participle" },
+        { "surface": "speaking", "label": "present participle" }
+      ]
+    },
+    {
+      "id": "en-write-v",
+      "language": "en",
+      "lemma": "write",
+      "partOfSpeech": "verb",
+      "ipa": "/raɪt/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "To form words or symbols on a surface or in a digital document.",
+          "example": "Please write your name here.",
+          "translations": [
+            { "language": "pt", "term": "escrever", "targetLemma": "escrever" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "writes", "label": "third-person singular present" },
+        { "surface": "wrote", "label": "simple past" },
+        { "surface": "written", "label": "past participle" },
+        { "surface": "writing", "label": "present participle" }
+      ]
+    },
+    {
+      "id": "en-read-v",
+      "language": "en",
+      "lemma": "read",
+      "partOfSpeech": "verb",
+      "ipa": "/riːd/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "To understand written or printed symbols.",
+          "example": "He reads before sleeping.",
+          "translations": [
+            { "language": "pt", "term": "ler", "targetLemma": "ler" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "reads", "label": "third-person singular present" },
+        { "surface": "read", "label": "simple past and past participle; pronounced /rɛd/" },
+        { "surface": "reading", "label": "present participle" }
+      ]
+    },
+    {
+      "id": "en-go-v",
+      "language": "en",
+      "lemma": "go",
+      "partOfSpeech": "verb",
+      "ipa": "/ɡəʊ/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "To move or travel from one place to another.",
+          "example": "We go to work by bus.",
+          "translations": [
+            { "language": "pt", "term": "ir", "targetLemma": "ir" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "goes", "label": "third-person singular present" },
+        { "surface": "went", "label": "simple past" },
+        { "surface": "gone", "label": "past participle" },
+        { "surface": "going", "label": "present participle" }
+      ]
+    },
+    {
+      "id": "en-be-v",
+      "language": "en",
+      "lemma": "be",
+      "partOfSpeech": "verb",
+      "ipa": "/biː/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "To exist or to have a particular identity, quality or state.",
+          "example": "They are ready.",
+          "translations": [
+            { "language": "pt", "term": "ser", "targetLemma": "ser" },
+            { "language": "pt", "term": "estar", "targetLemma": "estar" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "am", "label": "first-person singular present" },
+        { "surface": "is", "label": "third-person singular present" },
+        { "surface": "are", "label": "present plural and second person" },
+        { "surface": "was", "label": "singular past" },
+        { "surface": "were", "label": "plural and second-person past" },
+        { "surface": "been", "label": "past participle" },
+        { "surface": "being", "label": "present participle" }
+      ]
+    },
+    {
+      "id": "en-good-adj",
+      "language": "en",
+      "lemma": "good",
+      "partOfSpeech": "adjective",
+      "ipa": "/ɡʊd/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Having desirable, useful or morally positive qualities.",
+          "example": "That is a good idea.",
+          "translations": [
+            { "language": "pt", "term": "bom", "targetLemma": "bom" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "better", "label": "comparative" },
+        { "surface": "best", "label": "superlative" }
+      ]
+    },
+    {
+      "id": "en-language-n",
+      "language": "en",
+      "lemma": "language",
+      "partOfSpeech": "noun",
+      "ipa": "/ˈlæŋɡwɪdʒ/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "A structured system used for communication.",
+          "example": "Polish is a Slavic language.",
+          "translations": [
+            { "language": "pt", "term": "língua", "targetLemma": "língua" },
+            { "language": "pt", "term": "idioma", "targetLemma": "idioma" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "languages", "label": "plural" }
+      ]
+    },
+    {
+      "id": "en-star-n",
+      "language": "en",
+      "lemma": "star",
+      "partOfSpeech": "noun",
+      "ipa": "/stɑː/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "A luminous celestial body visible in the night sky.",
+          "example": "A bright star appeared above the horizon.",
+          "translations": [
+            { "language": "pt", "term": "estrela", "targetLemma": "estrela" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "stars", "label": "plural" }
+      ]
+    },
+    {
+      "id": "en-heart-n",
+      "language": "en",
+      "lemma": "heart",
+      "partOfSpeech": "noun",
+      "ipa": "/hɑːt/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "The muscular organ that circulates blood through the body.",
+          "example": "The heart beats continuously.",
+          "translations": [
+            { "language": "pt", "term": "coração", "targetLemma": "coração" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "hearts", "label": "plural" }
+      ]
+    },
+    {
+      "id": "en-search-v",
+      "language": "en",
+      "lemma": "search",
+      "partOfSpeech": "verb",
+      "ipa": "/sɜːtʃ/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "To look carefully for someone or something.",
+          "example": "Search the dictionary for the word.",
+          "translations": [
+            { "language": "pt", "term": "procurar", "targetLemma": "procurar" },
+            { "language": "pt", "term": "pesquisar", "targetLemma": "pesquisar" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "searches", "label": "third-person singular present" },
+        { "surface": "searched", "label": "simple past and past participle" },
+        { "surface": "searching", "label": "present participle" }
+      ]
+    },
+    {
+      "id": "en-history-n",
+      "language": "en",
+      "lemma": "history",
+      "partOfSpeech": "noun",
+      "ipa": "/ˈhɪstəri/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "The study or record of past events.",
+          "example": "She studies European history.",
+          "translations": [
+            { "language": "pt", "term": "história", "targetLemma": "história" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "histories", "label": "plural" }
+      ]
+    },
+
+    {
+      "id": "pt-correr-v",
+      "language": "pt",
+      "lemma": "correr",
+      "partOfSpeech": "verb",
+      "ipa": "/koˈʁeʁ/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "Deslocar-se rapidamente usando as pernas.",
+          "example": "Ela corre todas as manhãs.",
+          "translations": [
+            { "language": "en", "term": "run", "targetLemma": "run" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "corro", "label": "presente, primeira pessoa do singular" },
+        { "surface": "corre", "label": "presente, terceira pessoa do singular" },
+        { "surface": "corremos", "label": "presente, primeira pessoa do plural" },
+        { "surface": "correm", "label": "presente, terceira pessoa do plural" },
+        { "surface": "correu", "label": "pretérito perfeito, terceira pessoa do singular" },
+        { "surface": "correram", "label": "pretérito perfeito, terceira pessoa do plural" },
+        { "surface": "correndo", "label": "gerúndio" },
+        { "surface": "corrido", "label": "particípio" }
+      ]
+    },
+    {
+      "id": "pt-administrar-v",
+      "language": "pt",
+      "lemma": "administrar",
+      "partOfSpeech": "verb",
+      "ipa": "/admĩnisˈtɾaʁ/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "Dirigir ou organizar uma atividade, instituição ou recurso.",
+          "example": "Ela administra uma pequena loja.",
+          "translations": [
+            { "language": "en", "term": "manage", "targetLemma": "manage" },
+            { "language": "en", "term": "run", "targetLemma": "run" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "administro", "label": "presente, primeira pessoa do singular" },
+        { "surface": "administra", "label": "presente, terceira pessoa do singular" },
+        { "surface": "administrou", "label": "pretérito perfeito, terceira pessoa do singular" },
+        { "surface": "administrando", "label": "gerúndio" },
+        { "surface": "administrado", "label": "particípio" }
+      ]
+    },
+    {
+      "id": "pt-casa-n",
+      "language": "pt",
+      "lemma": "casa",
+      "partOfSpeech": "noun",
+      "ipa": "/ˈkazɐ/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Edificação destinada principalmente à habitação.",
+          "example": "A casa tem um pequeno jardim.",
+          "translations": [
+            { "language": "en", "term": "house", "targetLemma": "house" },
+            { "language": "en", "term": "home", "targetLemma": "home" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "casas", "label": "plural" }
+      ]
+    },
+    {
+      "id": "pt-camara-n",
+      "language": "pt",
+      "lemma": "câmara",
+      "partOfSpeech": "noun",
+      "ipa": "/ˈkɐ̃mɐɾɐ/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Recinto fechado ou uma das divisões de determinado órgão político.",
+          "example": "A proposta foi discutida na câmara.",
+          "translations": [
+            { "language": "en", "term": "chamber", "targetLemma": "chamber" },
+            { "language": "en", "term": "house", "targetLemma": "house" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "câmaras", "label": "plural" }
+      ]
+    },
+    {
+      "id": "pt-amor-n",
+      "language": "pt",
+      "lemma": "amor",
+      "partOfSpeech": "noun",
+      "ipa": "/aˈmoʁ/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Sentimento profundo de afeição, vínculo ou entrega.",
+          "example": "O amor amadureceu com os anos.",
+          "translations": [
+            { "language": "en", "term": "love", "targetLemma": "love", "targetEntryId": "en-love-n" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "amores", "label": "plural" }
+      ]
+    },
+    {
+      "id": "pt-amar-v",
+      "language": "pt",
+      "lemma": "amar",
+      "partOfSpeech": "verb",
+      "ipa": "/aˈmaʁ/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "Sentir amor ou afeição profunda por alguém ou algo.",
+          "example": "Ela ama os filhos.",
+          "translations": [
+            { "language": "en", "term": "love", "targetLemma": "love", "targetEntryId": "en-love-v" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "amo", "label": "presente, primeira pessoa do singular" },
+        { "surface": "ama", "label": "presente, terceira pessoa do singular" },
+        { "surface": "amamos", "label": "presente, primeira pessoa do plural" },
+        { "surface": "amam", "label": "presente, terceira pessoa do plural" },
+        { "surface": "amei", "label": "pretérito perfeito, primeira pessoa do singular" },
+        { "surface": "amou", "label": "pretérito perfeito, terceira pessoa do singular" },
+        { "surface": "amando", "label": "gerúndio" },
+        { "surface": "amado", "label": "particípio" }
+      ]
+    },
+    {
+      "id": "pt-dicionario-n",
+      "language": "pt",
+      "lemma": "dicionário",
+      "partOfSpeech": "noun",
+      "ipa": "/disjoˈnaɾju/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Obra de consulta que registra palavras e explica seus usos ou equivalências.",
+          "example": "Consultei a palavra no dicionário.",
+          "translations": [
+            { "language": "en", "term": "dictionary", "targetLemma": "dictionary" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "dicionários", "label": "plural" }
+      ]
+    },
+    {
+      "id": "pt-palavra-n",
+      "language": "pt",
+      "lemma": "palavra",
+      "partOfSpeech": "noun",
+      "ipa": "/paˈlavɾɐ/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Unidade da língua dotada de forma e significado.",
+          "example": "Esta palavra possui vários sentidos.",
+          "translations": [
+            { "language": "en", "term": "word", "targetLemma": "word" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "palavras", "label": "plural" }
+      ]
+    },
+    {
+      "id": "pt-livro-n",
+      "language": "pt",
+      "lemma": "livro",
+      "partOfSpeech": "noun",
+      "ipa": "/ˈlivɾu/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Obra escrita publicada em páginas reunidas ou em formato digital.",
+          "example": "O livro está sobre a mesa.",
+          "translations": [
+            { "language": "en", "term": "book", "targetLemma": "book" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "livros", "label": "plural" }
+      ]
+    },
+    {
+      "id": "pt-aprender-v",
+      "language": "pt",
+      "lemma": "aprender",
+      "partOfSpeech": "verb",
+      "ipa": "/apɾẽˈdeʁ/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "Adquirir conhecimento ou habilidade pelo estudo ou pela experiência.",
+          "example": "Ela está aprendendo inglês.",
+          "translations": [
+            { "language": "en", "term": "learn", "targetLemma": "learn" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "aprendo", "label": "presente, primeira pessoa do singular" },
+        { "surface": "aprende", "label": "presente, terceira pessoa do singular" },
+        { "surface": "aprendeu", "label": "pretérito perfeito, terceira pessoa do singular" },
+        { "surface": "aprendendo", "label": "gerúndio" },
+        { "surface": "aprendido", "label": "particípio" }
+      ]
+    },
+    {
+      "id": "pt-falar-v",
+      "language": "pt",
+      "lemma": "falar",
+      "partOfSpeech": "verb",
+      "ipa": "/faˈlaʁ/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "Expressar pensamentos por meio da voz.",
+          "example": "Você fala inglês?",
+          "translations": [
+            { "language": "en", "term": "speak", "targetLemma": "speak" },
+            { "language": "en", "term": "talk", "targetLemma": "talk" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "falo", "label": "presente, primeira pessoa do singular" },
+        { "surface": "fala", "label": "presente, terceira pessoa do singular" },
+        { "surface": "falou", "label": "pretérito perfeito, terceira pessoa do singular" },
+        { "surface": "falando", "label": "gerúndio" },
+        { "surface": "falado", "label": "particípio" }
+      ]
+    },
+    {
+      "id": "pt-escrever-v",
+      "language": "pt",
+      "lemma": "escrever",
+      "partOfSpeech": "verb",
+      "ipa": "/eskɾeˈveʁ/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "Representar palavras ou ideias por sinais gráficos.",
+          "example": "Escreva seu nome neste campo.",
+          "translations": [
+            { "language": "en", "term": "write", "targetLemma": "write" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "escrevo", "label": "presente, primeira pessoa do singular" },
+        { "surface": "escreve", "label": "presente, terceira pessoa do singular" },
+        { "surface": "escreveu", "label": "pretérito perfeito, terceira pessoa do singular" },
+        { "surface": "escrito", "label": "particípio" },
+        { "surface": "escrevendo", "label": "gerúndio" }
+      ]
+    },
+    {
+      "id": "pt-ler-v",
+      "language": "pt",
+      "lemma": "ler",
+      "partOfSpeech": "verb",
+      "ipa": "/leʁ/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "Compreender símbolos escritos ou impressos.",
+          "example": "Ele lê antes de dormir.",
+          "translations": [
+            { "language": "en", "term": "read", "targetLemma": "read" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "leio", "label": "presente, primeira pessoa do singular" },
+        { "surface": "lê", "label": "presente, terceira pessoa do singular" },
+        { "surface": "lemos", "label": "presente, primeira pessoa do plural" },
+        { "surface": "leu", "label": "pretérito perfeito, terceira pessoa do singular" },
+        { "surface": "lido", "label": "particípio" },
+        { "surface": "lendo", "label": "gerúndio" }
+      ]
+    },
+    {
+      "id": "pt-ir-v",
+      "language": "pt",
+      "lemma": "ir",
+      "partOfSpeech": "verb",
+      "ipa": "/iʁ/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "Deslocar-se de um lugar para outro.",
+          "example": "Vamos ao trabalho de ônibus.",
+          "translations": [
+            { "language": "en", "term": "go", "targetLemma": "go" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "vou", "label": "presente, primeira pessoa do singular" },
+        { "surface": "vai", "label": "presente, terceira pessoa do singular" },
+        { "surface": "vamos", "label": "presente, primeira pessoa do plural" },
+        { "surface": "vão", "label": "presente, terceira pessoa do plural" },
+        { "surface": "fui", "label": "pretérito perfeito, primeira pessoa do singular" },
+        { "surface": "foi", "label": "pretérito perfeito, terceira pessoa do singular" },
+        { "surface": "foram", "label": "pretérito perfeito, terceira pessoa do plural" },
+        { "surface": "indo", "label": "gerúndio" },
+        { "surface": "ido", "label": "particípio" }
+      ]
+    },
+    {
+      "id": "pt-ser-v",
+      "language": "pt",
+      "lemma": "ser",
+      "partOfSpeech": "verb",
+      "ipa": "/seʁ/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "Existir ou apresentar determinada identidade ou qualidade.",
+          "example": "Eles são brasileiros.",
+          "translations": [
+            { "language": "en", "term": "be", "targetLemma": "be" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "sou", "label": "presente, primeira pessoa do singular" },
+        { "surface": "é", "label": "presente, terceira pessoa do singular" },
+        { "surface": "somos", "label": "presente, primeira pessoa do plural" },
+        { "surface": "são", "label": "presente, terceira pessoa do plural" },
+        { "surface": "era", "label": "pretérito imperfeito, primeira ou terceira pessoa do singular" },
+        { "surface": "fui", "label": "pretérito perfeito, primeira pessoa do singular" },
+        { "surface": "foi", "label": "pretérito perfeito, terceira pessoa do singular" },
+        { "surface": "foram", "label": "pretérito perfeito, terceira pessoa do plural" },
+        { "surface": "sendo", "label": "gerúndio" },
+        { "surface": "sido", "label": "particípio" }
+      ]
+    },
+    {
+      "id": "pt-bom-adj",
+      "language": "pt",
+      "lemma": "bom",
+      "partOfSpeech": "adjective",
+      "ipa": "/bõ/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Que possui qualidades desejáveis, úteis ou moralmente positivas.",
+          "example": "Essa é uma boa ideia.",
+          "translations": [
+            { "language": "en", "term": "good", "targetLemma": "good" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "boa", "label": "feminino singular" },
+        { "surface": "bons", "label": "masculino plural" },
+        { "surface": "boas", "label": "feminino plural" },
+        { "surface": "melhor", "label": "comparativo" },
+        { "surface": "ótimo", "label": "superlativo irregular ou intensivo" }
+      ]
+    },
+    {
+      "id": "pt-lingua-n",
+      "language": "pt",
+      "lemma": "língua",
+      "partOfSpeech": "noun",
+      "ipa": "/ˈlĩɡwɐ/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Sistema estruturado de comunicação usado por uma comunidade.",
+          "example": "O polonês é uma língua eslava.",
+          "translations": [
+            { "language": "en", "term": "language", "targetLemma": "language" }
+          ]
+        },
+        {
+          "definition": "Órgão muscular situado na boca.",
+          "example": "A língua participa da articulação da fala.",
+          "translations": [
+            { "language": "en", "term": "tongue", "targetLemma": "tongue" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "línguas", "label": "plural" }
+      ]
+    },
+    {
+      "id": "pt-estrela-n",
+      "language": "pt",
+      "lemma": "estrela",
+      "partOfSpeech": "noun",
+      "ipa": "/esˈtɾelɐ/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Corpo celeste luminoso visível no céu noturno.",
+          "example": "Uma estrela brilhante surgiu no horizonte.",
+          "translations": [
+            { "language": "en", "term": "star", "targetLemma": "star" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "estrelas", "label": "plural" }
+      ]
+    },
+    {
+      "id": "pt-coracao-n",
+      "language": "pt",
+      "lemma": "coração",
+      "partOfSpeech": "noun",
+      "ipa": "/koɾaˈsɐ̃w̃/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Órgão muscular responsável por impulsionar o sangue pelo corpo.",
+          "example": "O coração bate continuamente.",
+          "translations": [
+            { "language": "en", "term": "heart", "targetLemma": "heart" }
+          ]
+        },
+        {
+          "definition": "Centro simbólico dos sentimentos e afetos.",
+          "example": "Guardou aquela lembrança no coração.",
+          "translations": [
+            { "language": "en", "term": "heart", "targetLemma": "heart" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "corações", "label": "plural" }
+      ]
+    },
+    {
+      "id": "pt-pesquisar-v",
+      "language": "pt",
+      "lemma": "pesquisar",
+      "partOfSpeech": "verb",
+      "ipa": "/peskiˈzaʁ/",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "Procurar informações de modo deliberado ou sistemático.",
+          "example": "Pesquise a palavra no dicionário.",
+          "translations": [
+            { "language": "en", "term": "search", "targetLemma": "search" },
+            { "language": "en", "term": "research", "targetLemma": "research" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "pesquiso", "label": "presente, primeira pessoa do singular" },
+        { "surface": "pesquisa", "label": "presente, terceira pessoa do singular" },
+        { "surface": "pesquisou", "label": "pretérito perfeito, terceira pessoa do singular" },
+        { "surface": "pesquisando", "label": "gerúndio" },
+        { "surface": "pesquisado", "label": "particípio" }
+      ]
+    },
+    {
+      "id": "pt-historia-n",
+      "language": "pt",
+      "lemma": "história",
+      "partOfSpeech": "noun",
+      "ipa": "/isˈtɔɾjɐ/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Estudo ou registro de acontecimentos passados.",
+          "example": "Ela estuda história europeia.",
+          "translations": [
+            { "language": "en", "term": "history", "targetLemma": "history" }
+          ]
+        },
+        {
+          "definition": "Narrativa real ou imaginária.",
+          "example": "Ele contou uma história breve.",
+          "translations": [
+            { "language": "en", "term": "story", "targetLemma": "story" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "histórias", "label": "plural" }
+      ]
+    },
+    {
+      "id": "pt-acao-n",
+      "language": "pt",
+      "lemma": "ação",
+      "partOfSpeech": "noun",
+      "ipa": "/aˈsɐ̃w̃/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Ato ou efeito de agir.",
+          "example": "A situação exige ação imediata.",
+          "translations": [
+            { "language": "en", "term": "action", "targetLemma": "action" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "ações", "label": "plural" }
+      ]
+    },
+    {
+      "id": "pt-pao-n",
+      "language": "pt",
+      "lemma": "pão",
+      "partOfSpeech": "noun",
+      "ipa": "/pɐ̃w̃/",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Alimento assado feito principalmente de farinha e água.",
+          "example": "O pão ainda está quente.",
+          "translations": [
+            { "language": "en", "term": "bread", "targetLemma": "bread" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "pães", "label": "plural" }
+      ]
+    },
+    {
+      "id": "en-pt-coracao-n",
+      "edition": "en",
+      "language": "pt",
+      "lemma": "coração",
+      "partOfSpeech": "noun",
+      "ipa": "/ko.ɾaˈsɐ̃w̃/",
+      "senses": [
+        {
+          "definition": "Heart; the muscular organ that pumps blood through the body.",
+          "example": "The Portuguese word coração also has figurative senses connected with emotion.",
+          "translations": []
+        }
+      ],
+      "forms": []
+    },
+    {
+      "id": "pl-milosc-n",
+      "language": "pl",
+      "lemma": "miłość",
+      "partOfSpeech": "noun",
+      "ipa": "/ˈmi.wɔɕt͡ɕ/",
+      "etymology": "Od prasłowiańskiego *milostь, utworzonego od przymiotnika *milъ.",
+      "inflectionKind": "declension",
+      "senses": [
+        {
+          "definition": "Głębokie uczucie przywiązania, troski lub oddania wobec osoby albo czegoś.",
+          "example": "Łączy ich wielka miłość.",
+          "translations": [
+            { "language": "en", "term": "love", "targetLemma": "love", "targetEntryId": "en-love-n" },
+            { "language": "pt", "term": "amor", "targetLemma": "amor", "targetEntryId": "pt-amor-n" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "miłości", "label": "dopełniacz, celownik lub miejscownik liczby pojedynczej" },
+        { "surface": "miłością", "label": "narzędnik liczby pojedynczej" },
+        { "surface": "miłościach", "label": "miejscownik liczby mnogiej" }
+      ]
+    },
+    {
+      "id": "en-pl-milosc-n",
+      "edition": "en",
+      "language": "pl",
+      "lemma": "miłość",
+      "partOfSpeech": "noun",
+      "ipa": "/ˈmi.wɔɕt͡ɕ/",
+      "senses": [
+        {
+          "definition": "Love; a deep feeling of affection, attachment, or devotion.",
+          "translations": []
+        }
+      ],
+      "forms": []
+    },
+    {
+      "id": "pl-prosic-v",
+      "language": "pl",
+      "lemma": "prosić",
+      "partOfSpeech": "verb",
+      "ipa": "/ˈprɔ.ɕit͡ɕ/",
+      "etymology": "Od prasłowiańskiego *prositi.",
+      "inflectionKind": "conjugation",
+      "senses": [
+        {
+          "definition": "Zwracać się do kogoś z prośbą o wykonanie czegoś lub o udzielenie czegoś.",
+          "example": "Proszę o pomoc.",
+          "translations": [
+            { "language": "en", "term": "ask", "targetLemma": "ask" },
+            { "language": "en", "term": "request", "targetLemma": "request" },
+            { "language": "pt", "term": "pedir", "targetLemma": "pedir" }
+          ]
+        }
+      ],
+      "forms": [
+        { "surface": "proszę", "label": "czas teraźniejszy, pierwsza osoba liczby pojedynczej" },
+        { "surface": "prosisz", "label": "czas teraźniejszy, druga osoba liczby pojedynczej" },
+        { "surface": "prosi", "label": "czas teraźniejszy, trzecia osoba liczby pojedynczej" },
+        { "surface": "prosił", "label": "czas przeszły, rodzaj męski, liczba pojedyncza" },
+        { "surface": "prosili", "label": "czas przeszły, rodzaj męskoosobowy, liczba mnoga" }
+      ]
+    },
+    {
+      "id": "en-pl-prosic-v",
+      "edition": "en",
+      "language": "pl",
+      "lemma": "prosić",
+      "partOfSpeech": "verb",
+      "ipa": "/ˈprɔ.ɕit͡ɕ/",
+      "senses": [
+        {
+          "definition": "To ask, request, or beg someone for something.",
+          "translations": []
+        }
+      ],
+      "forms": []
+    }
+  ]
+}

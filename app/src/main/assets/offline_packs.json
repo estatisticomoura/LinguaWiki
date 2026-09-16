@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "packages": [
+    {
+      "packId": "pt-pt",
+      "version": "2026-09-02",
+      "headwordLanguage": "pt",
+      "primaryEdition": "pt",
+      "displayName": "Português",
+      "downloadBytes": 39590052,
+      "installedBytes": 120827904,
+      "entryCount": 93848,
+      "senseCount": 151369,
+      "translationCount": 417989,
+      "formCount": 449746,
+      "sha256": "cb8dd745870c1c55f13b8af0d34cdb84a2297da6a8b27ed2a447d449cbbfbcd8",
+      "url": "https://github.com/estatisticomoura/LinguaWiki/releases/download/v0.4.0-prototype/linguawiki-pt-pt-2026-09-02.sqlite.gz",
+      "licenses": ["CC BY-SA 4.0"]
+    }
+  ]
+}

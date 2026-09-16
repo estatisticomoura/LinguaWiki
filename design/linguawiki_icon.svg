@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect x="24" y="24" width="464" height="464" rx="104" fill="#2F665A"/>
+  <circle cx="256" cy="254" r="198" fill="#3D776A"/>
+  <path d="M76 132 C137 111 200 116 256 151 C312 116 375 111 436 132 L436 402 C370 384 310 391 256 424 C202 391 142 384 76 402 Z" fill="#173E37" opacity="0.30"/>
+  <path d="M82 119 C143 100 204 108 252 139 L252 399 C202 370 146 364 82 382 Z" fill="#FFF9E9"/>
+  <path d="M430 119 C369 100 308 108 260 139 L260 399 C310 370 366 364 430 382 Z" fill="#FFF9E9"/>
+  <path d="M252 139 C205 113 151 107 98 120" fill="none" stroke="#D9CDAF" stroke-width="8" stroke-linecap="round"/>
+  <path d="M260 139 C307 113 361 107 414 120" fill="none" stroke="#D9CDAF" stroke-width="8" stroke-linecap="round"/>
+  <path d="M256 143 L256 404" fill="none" stroke="#C8B98F" stroke-width="8" stroke-linecap="round"/>
+  <text x="124" y="235" font-family="DejaVu Sans" font-size="64" font-weight="700" fill="#315E56">A</text>
+  <text x="188" y="235" font-family="DejaVu Sans" font-size="61" font-weight="700" fill="#A55C3D">Я</text>
+  <text x="145" y="325" font-family="DejaVu Sans" font-size="68" font-weight="700" fill="#765A27">Ω</text>
+  <text x="297" y="231" font-family="DejaVu Sans" font-size="66" font-weight="700" fill="#A55C3D">ع</text>
+  <text x="359" y="235" font-family="DejaVu Sans" font-size="58" font-weight="700" fill="#315E56">Ա</text>
+  <text x="299" y="325" font-family="DejaVu Sans" font-size="68" font-weight="700" fill="#315E56">ა</text>
+  <g transform="translate(370 276)" fill="none" stroke="#765A27" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M0 0 H50 V47 H0 Z M25 -13 V63 M5 22 H45"/>
+  </g>
+</svg>
