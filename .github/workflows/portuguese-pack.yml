@@ -3,6 +3,9 @@ name: Portuguese dictionary package
 on:
   pull_request:
     branches: [main]
+    paths:
+      - tools/build_dictionary_pack.py
+      - .github/workflows/portuguese-pack.yml
   workflow_dispatch:
 
 permissions:
