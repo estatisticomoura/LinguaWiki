@@ -28,7 +28,7 @@ DATA_LICENSE = "CC BY-SA 4.0"
 DATA_LICENSE_URL = "https://creativecommons.org/licenses/by-sa/4.0/"
 WIKTIONARY_URL = "https://pt.wiktionary.org/"
 TRANSFORMATION_NOTICE = (
-    "Portuguese-language records selected from the Wiktextract extraction; "
+    "Records in the selected headword language were selected from the Wiktextract extraction; "
     "fields normalized and reorganized into SQLite; form-only records collapsed "
     "into lemma indexes; package compressed by LinguaWiki."
 )
@@ -452,7 +452,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
 
         if record_index % args.report_every == 0:
             print(
-                f"pass 1: {record_index:,} Portuguese records; {counts['entries']:,} entries",
+                f"pass 1: {record_index:,} selected-language records; {counts['entries']:,} entries",
                 file=sys.stderr,
             )
     db.commit()
@@ -487,7 +487,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
                     counts["forms_from_records"] += 1
         if record_index % args.report_every == 0:
             print(
-                f"pass 2: {record_index:,} Portuguese records; {counts['forms_from_records']:,} form links",
+                f"pass 2: {record_index:,} selected-language records; {counts['forms_from_records']:,} form links",
                 file=sys.stderr,
             )
     db.commit()

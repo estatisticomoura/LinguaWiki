@@ -382,7 +382,7 @@ private fun EntrySummaryRow(entry: EntrySummary, onClick: () -> Unit) {
                     buildString {
                         append(languageBadge(entry.language))
                         append(" · ")
-                        append(entry.partsOfSpeech.joinToString(" · ") { partOfSpeechLabel(it) })
+                        append(entry.partsOfSpeech.joinToString(" · ") { it.replaceFirstChar(Char::uppercase) })
                         entry.ipa?.let { append(" · $it") }
                     },
                     style = MaterialTheme.typography.bodyMedium,
