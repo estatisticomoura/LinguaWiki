@@ -18,14 +18,23 @@ data class EntrySummary(
     val matchedSurface: String? = null,
     val matchKind: MatchKind = MatchKind.EXACT_LEMMA,
     val favorite: Boolean = false,
+    val entryIds: List<String> = listOf(id),
+    val partsOfSpeech: List<String> = listOf(partOfSpeech),
+    val contentScore: Long = 0,
 )
 
 data class Translation(
     val language: String,
+    val languageName: String = language,
     val term: String,
     val targetLemma: String?,
     val targetEntryId: String?,
+    val senseOrder: Int? = null,
+    val senseLabel: String? = null,
+    val tags: List<String> = emptyList(),
 )
+
+data class Pronunciation(val ipa: String, val labels: List<String> = emptyList())
 
 data class Sense(
     val order: Int,
@@ -37,6 +46,8 @@ data class Sense(
 data class WordForm(
     val surface: String,
     val label: String,
+    val tags: List<String> = emptyList(),
+    val rawTags: List<String> = emptyList(),
 )
 
 data class DictionaryEntry(
@@ -46,10 +57,13 @@ data class DictionaryEntry(
     val lemma: String,
     val partOfSpeech: String,
     val ipa: String?,
+    val pronunciations: List<Pronunciation> = ipa?.let { listOf(Pronunciation(it)) }.orEmpty(),
     val etymology: String?,
     val inflectionKind: String?,
+    val grammaticalFeatures: List<String> = emptyList(),
     val senses: List<Sense>,
     val forms: List<WordForm>,
+    val generalTranslations: List<Translation> = emptyList(),
     val favorite: Boolean,
 )
 
@@ -96,6 +110,7 @@ data class OfflinePackDescriptor(
     val packId: String,
     val version: String,
     val headwordLanguage: String,
+    val definitionLanguage: String = headwordLanguage,
     val primaryEdition: String,
     val displayName: String,
     val downloadBytes: Long,

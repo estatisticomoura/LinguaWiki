@@ -8,6 +8,7 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.webkit.WebChromeClient
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
@@ -99,6 +100,9 @@ import org.linguawiki.offline.data.OnlineSuggestion
 import org.linguawiki.offline.data.SearchNormalizer
 import org.linguawiki.offline.data.Sense
 import org.linguawiki.offline.data.ThemeMode
+import org.linguawiki.offline.data.Translation
+import org.linguawiki.offline.data.WordForm
+import java.text.Collator
 import java.util.Locale
 
 @Composable
@@ -155,8 +159,10 @@ fun LinguaWikiApp(viewModel: MainViewModel, state: MainUiState) {
             suggestions = state.onlineSuggestions,
             suggestionsLoading = state.onlineSuggestionLoading,
             suggestionsFailed = state.onlineSuggestionError,
+            suggestionsExpanded = state.onlineSuggestionsExpanded,
             enabledEditions = viewModel.availableEditions.filter { it.code in state.onlineEditions },
             activeEditionCode = state.activeOnlineEdition,
+            headwordLanguage = state.activeLanguage,
             onBack = viewModel::goBack,
             onQueryChange = viewModel::updateOnlineDraft,
             onSearch = viewModel::submitOnlineSearch,
@@ -314,18 +320,6 @@ private fun SearchScreen(state: MainUiState, viewModel: MainViewModel) {
 
         if (state.query.isBlank()) {
             item { InformationCard(text = stringResource(R.string.search_welcome)) }
-            if (state.history.isNotEmpty()) {
-                item {
-                    Text(
-                        stringResource(R.string.recently_viewed),
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                }
-                items(state.history.take(4), key = { "recent-${it.id}" }) { entry ->
-                    EntrySummaryRow(entry = entry, onClick = { viewModel.openEntry(entry.id) })
-                }
-            }
         } else if (!state.loading && state.results.isEmpty()) {
             item {
                 Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
@@ -388,7 +382,7 @@ private fun EntrySummaryRow(entry: EntrySummary, onClick: () -> Unit) {
                     buildString {
                         append(languageBadge(entry.language))
                         append(" · ")
-                        append(partOfSpeechLabel(entry.partOfSpeech))
+                        append(entry.partsOfSpeech.joinToString(" · ") { partOfSpeechLabel(it) })
                         entry.ipa?.let { append(" · $it") }
                     },
                     style = MaterialTheme.typography.bodyMedium,
@@ -851,12 +845,17 @@ private fun EntryScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            if (entry.ipa != null) {
+            if (entry.pronunciations.isNotEmpty()) {
                 item {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Column(Modifier.weight(1f)) {
                             Text(stringResource(R.string.pronunciation), style = MaterialTheme.typography.labelLarge)
-                            Text(entry.ipa, style = MaterialTheme.typography.titleLarge)
+                            entry.pronunciations.forEach { pronunciation ->
+                                Text(
+                                    pronunciation.ipa + pronunciation.labels.takeIf { it.isNotEmpty() }?.joinToString(", ", " — ").orEmpty(),
+                                    style = MaterialTheme.typography.titleLarge,
+                                )
+                            }
                         }
                         OutlinedButton(onClick = onSpeak) {
                             Icon(Icons.AutoMirrored.Filled.VolumeUp, null, Modifier.size(18.dp))
@@ -886,7 +885,13 @@ private fun EntryScreen(
             }
             item { SectionTitle(stringResource(R.string.meanings)) }
             items(entry.senses, key = { it.order }) { sense ->
-                SenseCard(sense = sense, onTranslation = onTranslation)
+                SenseCard(sense = sense)
+            }
+            val allTranslations = entry.senses.flatMap { it.translations } + entry.generalTranslations
+            if (allTranslations.isNotEmpty()) {
+                item {
+                    TranslationSection(allTranslations, entry.edition, onTranslation)
+                }
             }
             if (entry.edition != "en" && !entry.id.startsWith("pack/")) {
                 item {
@@ -931,10 +936,14 @@ private fun EntryScreen(
             },
             text = {
                 LazyColumn(Modifier.heightIn(max = 470.dp)) {
-                    items(entry.forms) { form ->
-                        Column(Modifier.fillMaxWidth().padding(vertical = 7.dp)) {
-                            Text(form.surface, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Medium)
-                            Text(form.label, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    val groups = entry.forms.groupBy(::formGroup)
+                    groups.forEach { (group, forms) ->
+                        item { Text(group, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 10.dp, bottom = 4.dp)) }
+                        items(forms) { form ->
+                            Row(Modifier.fillMaxWidth().padding(vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                                Text(formPronoun(entry.language, form), fontWeight = FontWeight.SemiBold, modifier = Modifier.weight(.42f))
+                                Text(form.surface, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(.58f))
+                            }
                         }
                     }
                 }
@@ -983,7 +992,7 @@ private fun EnglishReferenceCard(entry: DictionaryEntry) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun SenseCard(sense: Sense, onTranslation: (String, String, String?, String?) -> Unit) {
+private fun SenseCard(sense: Sense) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text("${sense.order}.", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
@@ -991,26 +1000,83 @@ private fun SenseCard(sense: Sense, onTranslation: (String, String, String?, Str
             sense.examples.forEach {
                 Text(it, style = MaterialTheme.typography.bodyMedium, fontStyle = FontStyle.Italic, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
-            if (sense.translations.isNotEmpty()) {
-                Text(stringResource(R.string.translations), style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(top = 3.dp))
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    sense.translations.forEach { translation ->
-                        AssistChip(
-                            onClick = {
-                                onTranslation(
-                                    translation.language,
-                                    translation.term,
-                                    translation.targetLemma,
-                                    translation.targetEntryId,
-                                )
-                            },
-                            label = { Text("${languageBadge(translation.language)} ${translation.term}") },
-                        )
-                    }
-                }
-            }
         }
     }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun TranslationSection(
+    translations: List<Translation>,
+    dictionaryLanguage: String,
+    onTranslation: (String, String, String?, String?) -> Unit,
+) {
+    val locale = Locale.forLanguageTag(dictionaryLanguage)
+    val collator = remember(locale) { Collator.getInstance(locale) }
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        SectionTitle(stringResource(R.string.translations))
+        translations.groupBy { it.senseOrder ?: 0 }.toSortedMap().forEach { (senseOrder, senseTranslations) ->
+            if (senseOrder > 0) Text(senseOrder.toString() + ".", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
+            senseTranslations.groupBy { it.language }.entries
+                .sortedWith { a, b -> collator.compare(languageDisplayName(a.key, locale, a.value.first().languageName), languageDisplayName(b.key, locale, b.value.first().languageName)) }
+                .forEach { (language, values) ->
+                    Column {
+                        Text(languageDisplayName(language, locale, values.first().languageName), style = MaterialTheme.typography.labelLarge)
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            values.distinctBy { it.term }.forEach { translation ->
+                                AssistChip(
+                                    onClick = { onTranslation(translation.language, translation.term, translation.targetLemma, translation.targetEntryId) },
+                                    label = { Text(translation.term) },
+                                )
+                            }
+                        }
+                    }
+                }
+        }
+    }
+}
+
+private fun languageDisplayName(code: String, locale: Locale, fallback: String): String {
+    val display = Locale.forLanguageTag(code).getDisplayLanguage(locale)
+    return display.takeIf { it.isNotBlank() && !it.equals(code, true) } ?: fallback
+}
+
+private fun formGroup(form: WordForm): String {
+    val structural = listOf("indicative", "subjunctive", "imperative", "conditional", "present", "past", "future", "perfect", "imperfect", "pluperfect", "infinitive", "participle", "gerund")
+    return (form.tags + form.rawTags).filter { tag -> structural.any { tag.contains(it, ignoreCase = true) } }.joinToString(" · ").ifBlank { form.label.ifBlank { "Forms" } }
+}
+
+private fun formPronoun(language: String, form: WordForm): String {
+    val tags = (form.tags + form.rawTags).map { it.lowercase() }
+    val person = when {
+        tags.any { it == "first-person" || it == "1" || it.startsWith("1st") } -> 1
+        tags.any { it == "second-person" || it == "2" || it.startsWith("2nd") } -> 2
+        tags.any { it == "third-person" || it == "3" || it.startsWith("3rd") } -> 3
+        else -> 0
+    }
+    val plural = tags.any { it == "plural" }
+    val pronouns = when (language) {
+        "pt" -> listOf("eu", "tu", "ele/ela/você", "nós", "vós", "eles/elas/vocês")
+        "en" -> listOf("I", "you", "he/she/it", "we", "you", "they")
+        "de" -> listOf("ich", "du", "er/sie/es", "wir", "ihr", "sie")
+        "es" -> listOf("yo", "tú", "él/ella/usted", "nosotros", "vosotros", "ellos/ellas/ustedes")
+        "fr" -> listOf("je", "tu", "il/elle/on", "nous", "vous", "ils/elles")
+        "it" -> listOf("io", "tu", "lui/lei", "noi", "voi", "loro")
+        "pl" -> listOf("ja", "ty", "on/ona/ono", "my", "wy", "oni/one")
+        "nl" -> listOf("ik", "jij", "hij/zij/het", "wij", "jullie", "zij")
+        "ru" -> listOf("я", "ты", "он/она/оно", "мы", "вы", "они")
+        "cs" -> listOf("já", "ty", "on/ona/ono", "my", "vy", "oni/ony/ona")
+        "el" -> listOf("εγώ", "εσύ", "αυτός/αυτή/αυτό", "εμείς", "εσείς", "αυτοί/αυτές/αυτά")
+        "tr" -> listOf("ben", "sen", "o", "biz", "siz", "onlar")
+        "id", "ms" -> listOf("saya", "kamu", "dia", "kami", "kalian", "mereka")
+        "vi" -> listOf("tôi", "bạn", "anh ấy/cô ấy", "chúng tôi", "các bạn", "họ")
+        "zh" -> listOf("我", "你", "他/她", "我们", "你们", "他们/她们")
+        "ja" -> listOf("私", "あなた", "彼/彼女", "私たち", "あなたたち", "彼ら/彼女ら")
+        "ko" -> listOf("나", "너", "그/그녀", "우리", "너희", "그들")
+        else -> emptyList()
+    }
+    if (person in 1..3 && pronouns.size == 6) return pronouns[(if (plural) 3 else 0) + person - 1]
+    return form.label.ifBlank { (form.tags + form.rawTags).joinToString(" · ").ifBlank { "—" } }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -1022,8 +1088,10 @@ private fun OnlineScreen(
     suggestions: List<OnlineSuggestion>,
     suggestionsLoading: Boolean,
     suggestionsFailed: Boolean,
+    suggestionsExpanded: Boolean,
     enabledEditions: List<OnlineEdition>,
     activeEditionCode: String,
+    headwordLanguage: String,
     onBack: () -> Unit,
     onQueryChange: (String) -> Unit,
     onSearch: (String) -> Unit,
@@ -1039,7 +1107,7 @@ private fun OnlineScreen(
     var loadFailed by remember(selected.code, committedQuery) { mutableStateOf(false) }
     var webView by remember { mutableStateOf<WebView?>(null) }
     val encoded = Uri.encode(committedQuery.replace(' ', '_'))
-    val url = "${selected.baseUrl}/wiki/$encoded"
+    val url = "${selected.baseUrl}/wiki/$encoded${wiktionaryLanguageSection(selected.code, headwordLanguage)}"
     val submitSearch = {
         if (draftQuery.isNotBlank()) {
             focusManager.clearFocus()
@@ -1115,7 +1183,7 @@ private fun OnlineScreen(
                     }
                 }
             }
-            if (suggestions.isNotEmpty()) {
+            if (suggestionsExpanded && suggestions.isNotEmpty()) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -1194,10 +1262,12 @@ private fun AndroidWebView(
         factory = { context ->
             WebView(context).apply {
                 layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                settings.javaScriptEnabled = false
+                settings.javaScriptEnabled = true
                 settings.domStorageEnabled = false
+                settings.mediaPlaybackRequiresUserGesture = false
                 settings.builtInZoomControls = true
                 settings.displayZoomControls = false
+                webChromeClient = WebChromeClient()
                 webViewClient = object : WebViewClient() {
                     override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
                         val host = request?.url?.host.orEmpty()
@@ -1223,6 +1293,9 @@ private fun AndroidWebView(
 @Composable
 private fun localizedLanguageName(language: String): String =
     languageDisplayName(language, LocalConfiguration.current.locales[0])
+
+internal fun wiktionaryLanguageSection(edition: String, headwordLanguage: String): String =
+    if (edition == "en" && headwordLanguage == "pl") "#Polish" else ""
 
 private fun editionDisplayLabel(edition: OnlineEdition, displayLocale: Locale): String {
     val localized = languageDisplayName(edition.code, displayLocale)

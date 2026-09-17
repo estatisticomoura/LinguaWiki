@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any, Iterable, Iterator
 
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 DEFAULT_SOURCE_URL = "https://kaikki.org/dictionary/downloads/pt/pt-extract.jsonl.gz"
 DATA_LICENSE = "CC BY-SA 4.0"
 DATA_LICENSE_URL = "https://creativecommons.org/licenses/by-sa/4.0/"
@@ -71,14 +71,20 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("output", type=Path)
     parser.add_argument("--edition", default="pt")
     parser.add_argument("--language", default="pt")
+    parser.add_argument("--definition-language", default="pt")
     parser.add_argument("--pack-id", default="pt-pt")
     parser.add_argument("--version", default="2026-09-02")
+    parser.add_argument("--dump-date", default="")
+    parser.add_argument("--display-name", default="Português")
+    parser.add_argument("--wiktionary-url", default=WIKTIONARY_URL)
+    parser.add_argument("--attribution", default="Portuguese Wiktionary contributors")
     parser.add_argument("--source-url", default=DEFAULT_SOURCE_URL)
     parser.add_argument("--source-sha256", default="")
     parser.add_argument("--gzip-output", type=Path)
     parser.add_argument("--manifest", type=Path)
     parser.add_argument("--download-url", default="")
     parser.add_argument("--report-every", type=int, default=50_000)
+    parser.add_argument("--skip-vacuum", action="store_true")
     return parser.parse_args()
 
 
@@ -156,14 +162,65 @@ def examples_json(sense: dict[str, Any]) -> str | None:
     return json.dumps(examples, ensure_ascii=False, separators=(",", ":")) if examples else None
 
 
-def choose_ipa(record: dict[str, Any]) -> str | None:
+def pronunciations(record: dict[str, Any]) -> list[tuple[str, list[str]]]:
+    output: list[tuple[str, list[str]]] = []
+    seen: set[tuple[str, tuple[str, ...]]] = set()
     for sound in record.get("sounds") or []:
         ipa = compact_text(sound.get("ipa"))
         tags = {str(tag).casefold() for tag in (sound.get("tags") or [])}
         raw_tags = {str(tag).casefold() for tag in (sound.get("raw_tags") or [])}
         if ipa and not any("sampa" in tag for tag in tags | raw_tags):
-            return ipa
-    return None
+            labels = [compact_text(x) for x in [*(sound.get("tags") or []), *(sound.get("raw_tags") or [])] if compact_text(x) and "sampa" not in compact_text(x).casefold()]
+            key = (ipa, tuple(labels))
+            if key not in seen:
+                seen.add(key)
+                output.append((ipa, labels))
+    return output
+
+
+def json_array(values: Iterable[Any]) -> str:
+    return json.dumps(list(values), ensure_ascii=False, separators=(",", ":"))
+
+
+def grammatical_features(record: dict[str, Any]) -> list[str]:
+    ignored = {"canonical", "table-tags", "romanization", "form-of"}
+    return list(dict.fromkeys(compact_text(x) for x in [*(record.get("tags") or []), *(record.get("raw_tags") or [])] if compact_text(x) and compact_text(x) not in ignored))
+
+
+def normalized_words(value: str) -> set[str]:
+    words: set[str] = set()
+    for raw in folded(value).replace("/", " ").replace(";", " ").split():
+        word = raw.strip(".,:()[]{}!?")
+        if len(word) > 3 and word.endswith("s"):
+            word = word[:-1]
+        if word:
+            words.add(word)
+    return words
+
+
+def match_translation_sense(translation: dict[str, Any], sense_ids: dict[int, int], definitions: dict[int, str]) -> tuple[int | None, int | None, str | None]:
+    raw = translation.get("sense_index")
+    try:
+        source_index = int(raw) if raw is not None else 0
+    except (TypeError, ValueError):
+        source_index = 0
+    if source_index in sense_ids:
+        return sense_ids[source_index], list(sense_ids).index(source_index) + 1, None
+    label = compact_text(translation.get("sense")) or None
+    if not label:
+        return None, None, None
+    needle = folded(label)
+    label_words = normalized_words(label)
+    candidates: list[tuple[float, int, int]] = []
+    for order, (source_index, definition) in enumerate(definitions.items(), 1):
+        haystack = folded(definition)
+        score = 1.0 if needle == haystack or needle in haystack or haystack in needle else len(label_words & normalized_words(definition)) / max(1, len(label_words))
+        if score >= 0.6:
+            candidates.append((score, order, source_index))
+    if candidates:
+        _, order, source_index = max(candidates)
+        return sense_ids.get(source_index), order, label
+    return None, None, label
 
 
 def etymology(record: dict[str, Any]) -> str | None:
@@ -215,8 +272,11 @@ def create_schema(db: sqlite3.Connection) -> None:
             part_of_speech TEXT NOT NULL,
             ipa TEXT,
             etymology TEXT,
-            inflection_kind TEXT
+            inflection_kind TEXT,
+            grammatical_features_json TEXT NOT NULL DEFAULT '[]',
+            content_score INTEGER NOT NULL DEFAULT 0
         );
+        CREATE TABLE pronunciations (id INTEGER PRIMARY KEY, entry_id INTEGER NOT NULL, ipa TEXT NOT NULL, labels_json TEXT NOT NULL, UNIQUE(entry_id, ipa, labels_json));
         CREATE TABLE senses (
             id INTEGER PRIMARY KEY,
             entry_id INTEGER NOT NULL,
@@ -226,9 +286,14 @@ def create_schema(db: sqlite3.Connection) -> None:
         );
         CREATE TABLE translations (
             id INTEGER PRIMARY KEY,
-            sense_id INTEGER NOT NULL,
-            language TEXT NOT NULL,
-            term TEXT NOT NULL
+            entry_id INTEGER NOT NULL,
+            sense_id INTEGER,
+            sense_order INTEGER,
+            sense_label TEXT,
+            language_code TEXT NOT NULL,
+            language_name TEXT NOT NULL,
+            term TEXT NOT NULL,
+            tags_json TEXT NOT NULL
         );
         CREATE TABLE forms (
             id INTEGER PRIMARY KEY,
@@ -237,7 +302,9 @@ def create_schema(db: sqlite3.Connection) -> None:
             surface_key TEXT NOT NULL,
             folded_key TEXT NOT NULL,
             label TEXT NOT NULL,
-            UNIQUE(entry_id, surface_key)
+            tags_json TEXT NOT NULL,
+            raw_tags_json TEXT NOT NULL,
+            UNIQUE(entry_id, surface_key, tags_json, raw_tags_json)
         );
         """
     )
@@ -252,16 +319,18 @@ def insert_form(
     entry_id: int,
     surface: str,
     label: str,
+    tags: list[Any] | None = None,
+    raw_tags: list[Any] | None = None,
 ) -> bool:
     surface = compact_text(surface)
     if not surface:
         return False
     cursor = db.execute(
         """
-        INSERT OR IGNORE INTO forms(entry_id, surface, surface_key, folded_key, label)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT OR IGNORE INTO forms(entry_id, surface, surface_key, folded_key, label, tags_json, raw_tags_json)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
-        (entry_id, surface, canonical(surface), folded(surface), label[:600]),
+        (entry_id, surface, canonical(surface), folded(surface), label[:600], json_array(tags or []), json_array(raw_tags or [])),
     )
     return cursor.rowcount > 0
 
@@ -283,12 +352,13 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             "version": args.version,
             "edition": args.edition,
             "language": args.language,
+            "definition_language": args.definition_language,
             "source_url": args.source_url,
             "source_sha256": source_sha256,
             "license": DATA_LICENSE,
             "license_url": DATA_LICENSE_URL,
-            "attribution": f"Portuguese Wiktionary contributors; extracted with Wiktextract ({args.version})",
-            "attribution_url": WIKTIONARY_URL,
+            "attribution": f"{args.attribution}; extracted with Wiktextract ({args.dump_date or args.version})",
+            "attribution_url": args.wiktionary_url,
             "changes": TRANSFORMATION_NOTICE,
         },
     )
@@ -319,12 +389,13 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         if record_forms:
             inflection_kind = "conjugation" if pos == "verb" else "declension"
 
+        all_pronunciations = pronunciations(record)
         cursor = db.execute(
             """
             INSERT INTO entries(
                 stable_id, lemma, lemma_key, folded_key, part_of_speech,
-                ipa, etymology, inflection_kind
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                ipa, etymology, inflection_kind, grammatical_features_json
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 external_id,
@@ -332,16 +403,20 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
                 lemma_key,
                 folded(lemma),
                 pos,
-                choose_ipa(record),
+                all_pronunciations[0][0] if all_pronunciations else None,
                 etymology(record),
                 inflection_kind,
+                json_array(grammatical_features(record)),
             ),
         )
         entry_id = int(cursor.lastrowid)
         lemma_entries[lemma_key].append((entry_id, pos))
         counts["entries"] += 1
+        for ipa, labels in all_pronunciations:
+            db.execute("INSERT OR IGNORE INTO pronunciations(entry_id, ipa, labels_json) VALUES (?, ?, ?)", (entry_id, ipa, json_array(labels)))
 
         sense_ids: dict[int, int] = {}
+        sense_definitions: dict[int, str] = {}
         for output_order, (source_index, sense) in enumerate(senses, 1):
             definition = sense_definition(sense)
             if not definition:
@@ -354,24 +429,25 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
                 (entry_id, output_order, definition, examples_json(sense)),
             )
             sense_ids[source_index] = int(sense_cursor.lastrowid)
+            sense_definitions[source_index] = definition
             counts["senses"] += 1
 
-        first_sense_id = next(iter(sense_ids.values()), None)
         for translation in record.get("translations") or []:
             term = compact_text(translation.get("word"))
             language = compact_text(translation.get("lang_code"))
-            if not term or not language or first_sense_id is None:
+            language_name = compact_text(translation.get("lang")) or language
+            if not term or not language:
                 continue
-            sense_id = sense_ids.get(int(translation.get("sense_index") or 0), first_sense_id)
+            sense_id, sense_order, sense_label = match_translation_sense(translation, sense_ids, sense_definitions)
             db.execute(
-                "INSERT INTO translations(sense_id, language, term) VALUES (?, ?, ?)",
-                (sense_id, language, term),
+                "INSERT INTO translations(entry_id, sense_id, sense_order, sense_label, language_code, language_name, term, tags_json) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (entry_id, sense_id, sense_order, sense_label, language, language_name, term, json_array([*(translation.get("tags") or []), *(translation.get("raw_tags") or [])])),
             )
             counts["translations"] += 1
 
         for form in record_forms:
             surface = compact_text(form.get("form"))
-            if insert_form(db, entry_id, surface, tag_label(form.get("tags") or [], form.get("raw_tags"))):
+            if insert_form(db, entry_id, surface, tag_label(form.get("tags") or [], form.get("raw_tags")), form.get("tags") or [], form.get("raw_tags") or []):
                 counts["forms_from_lemmas"] += 1
 
         if record_index % args.report_every == 0:
@@ -407,7 +483,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             candidates = lemma_entries.get(canonical(target), [])
             preferred = [candidate for candidate in candidates if candidate[1] == source_pos]
             for entry_id, _ in preferred or candidates:
-                if insert_form(db, entry_id, surface, label):
+                if insert_form(db, entry_id, surface, label, record.get("tags") or [], []):
                     counts["forms_from_records"] += 1
         if record_index % args.report_every == 0:
             print(
@@ -426,10 +502,18 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         CREATE INDEX forms_entry ON forms(entry_id);
         CREATE INDEX senses_entry ON senses(entry_id, sense_order);
         CREATE INDEX translations_sense ON translations(sense_id);
+        CREATE INDEX translations_entry ON translations(entry_id);
+        CREATE INDEX pronunciations_entry ON pronunciations(entry_id);
         ANALYZE;
-        VACUUM;
         """
     )
+    db.execute("""UPDATE entries SET content_score =
+        (SELECT COUNT(*) * 10000 FROM senses WHERE senses.entry_id=entries.id) +
+        (SELECT COUNT(*) * 100 FROM translations WHERE translations.entry_id=entries.id) +
+        (SELECT COUNT(*) FROM forms WHERE forms.entry_id=entries.id)""")
+    db.commit()
+    if not args.skip_vacuum:
+        db.execute("VACUUM")
     for table in ("entries", "senses", "translations", "forms"):
         counts[table] = int(db.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0])
     assert db.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
@@ -456,8 +540,9 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         "packId": args.pack_id,
         "version": args.version,
         "headwordLanguage": args.language,
+        "definitionLanguage": args.definition_language,
         "primaryEdition": args.edition,
-        "displayName": "Português",
+        "displayName": args.display_name,
         "downloadBytes": gzip_path.stat().st_size if gzip_path else None,
         "installedBytes": args.output.stat().st_size,
         "entryCount": counts["entries"],
@@ -470,14 +555,14 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         "source": {
             "name": "Wiktionary",
             "edition": args.edition,
-            "dumpDate": args.version,
+            "dumpDate": args.dump_date or args.version,
             "url": args.source_url,
             "sha256": source_sha256,
         },
         "licenses": [DATA_LICENSE],
         "licenseUrls": [DATA_LICENSE_URL],
-        "attribution": "Portuguese Wiktionary contributors; extraction by Wiktextract/Kaikki.org",
-        "attributionUrl": WIKTIONARY_URL,
+        "attribution": f"{args.attribution}; extraction by Wiktextract/Kaikki.org",
+        "attributionUrl": args.wiktionary_url,
         "changes": TRANSFORMATION_NOTICE,
     }
     if args.manifest:

@@ -53,6 +53,7 @@ data class MainUiState(
     val onlineSuggestions: List<OnlineSuggestion> = emptyList(),
     val onlineSuggestionLoading: Boolean = false,
     val onlineSuggestionError: Boolean = false,
+    val onlineSuggestionsExpanded: Boolean = false,
     val activeOnlineEdition: String = "pt",
     val onlineEditions: Set<String> = setOf("en", "pt"),
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
@@ -205,7 +206,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun updateOnlineDraft(value: String) {
-        _state.update { it.copy(onlineDraft = value, onlineSuggestionError = false) }
+        _state.update { it.copy(onlineDraft = value, onlineSuggestionError = false, onlineSuggestionsExpanded = value.isNotBlank()) }
         scheduleOnlineSuggestions()
     }
 
@@ -217,9 +218,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 onlineSuggestions = emptyList(),
                 onlineSuggestionLoading = false,
                 onlineSuggestionError = false,
+                onlineSuggestionsExpanded = false,
             )
         }
-        scheduleOnlineSuggestions(immediate = true)
     }
 
     fun submitOnlineSearch(term: String = _state.value.onlineDraft) {
@@ -233,6 +234,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 onlineSuggestions = emptyList(),
                 onlineSuggestionLoading = false,
                 onlineSuggestionError = false,
+                onlineSuggestionsExpanded = false,
             )
         }
     }
