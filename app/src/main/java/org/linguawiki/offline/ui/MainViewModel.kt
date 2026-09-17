@@ -53,6 +53,7 @@ data class MainUiState(
     val onlineSuggestions: List<OnlineSuggestion> = emptyList(),
     val onlineSuggestionLoading: Boolean = false,
     val onlineSuggestionError: Boolean = false,
+    val onlineSuggestionsExpanded: Boolean = false,
     val activeOnlineEdition: String = "pt",
     val onlineEditions: Set<String> = setOf("en", "pt"),
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
@@ -205,7 +206,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun updateOnlineDraft(value: String) {
-        _state.update { it.copy(onlineDraft = value, onlineSuggestionError = false) }
+        _state.update { it.copy(onlineDraft = value, onlineSuggestionError = false, onlineSuggestionsExpanded = value.isNotBlank()) }
         scheduleOnlineSuggestions()
     }
 
@@ -217,9 +218,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 onlineSuggestions = emptyList(),
                 onlineSuggestionLoading = false,
                 onlineSuggestionError = false,
+                onlineSuggestionsExpanded = false,
             )
         }
-        scheduleOnlineSuggestions(immediate = true)
     }
 
     fun submitOnlineSearch(term: String = _state.value.onlineDraft) {
@@ -233,6 +234,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 onlineSuggestions = emptyList(),
                 onlineSuggestionLoading = false,
                 onlineSuggestionError = false,
+                onlineSuggestionsExpanded = false,
             )
         }
     }
@@ -475,7 +477,29 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (!entryId.startsWith("pack/")) return database.getEntry(entryId)
         val packId = entryId.removePrefix("pack/").substringBefore('/')
         val pack = descriptor(packId) ?: return null
-        return packDatabase(pack.headwordLanguage)?.getEntry(entryId)
+        val source = packDatabase(pack.headwordLanguage) ?: return null
+        val entries = source.siblingEntryIds(entryId).mapNotNull(source::getEntry)
+        if (entries.isEmpty()) return null
+        if (entries.size == 1) return entries.first()
+        val primary = entries.first()
+        var nextSense = 1
+        val senses = entries.flatMap { sibling ->
+            sibling.senses.map { sense ->
+                val order = nextSense++
+                sense.copy(
+                    order = order,
+                    translations = sense.translations.map { it.copy(senseOrder = order) },
+                )
+            }
+        }
+        return primary.copy(
+            partOfSpeech = entries.map { it.partOfSpeech }.distinct().joinToString(" · "),
+            pronunciations = entries.flatMap { it.pronunciations }.distinct(),
+            etymology = entries.mapNotNull { it.etymology }.distinct().joinToString("\n\n").ifBlank { null },
+            senses = senses,
+            forms = entries.flatMap { it.forms }.distinct(),
+            generalTranslations = entries.flatMap { it.generalTranslations }.distinct(),
+        )
     }
 
     private fun hasEntry(entryId: String): Boolean {

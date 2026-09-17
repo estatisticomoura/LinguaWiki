@@ -147,7 +147,7 @@ class OfflinePackManager(private val context: Context) {
         try {
             val metadata = mutableMapOf<String, String>()
             db.rawQuery(
-                "SELECT key, value FROM meta WHERE key IN ('schema_version', 'pack_id', 'version', 'edition', 'language')",
+                "SELECT key, value FROM meta WHERE key IN ('schema_version', 'pack_id', 'version', 'edition', 'language', 'definition_language')",
                 null,
             ).use { cursor ->
                 while (cursor.moveToNext()) metadata[cursor.getString(0)] = cursor.getString(1)
@@ -157,6 +157,7 @@ class OfflinePackManager(private val context: Context) {
             ensure(metadata["version"] == descriptor.version, OfflinePackError.INVALID_PACKAGE)
             ensure(metadata["edition"] == descriptor.primaryEdition, OfflinePackError.INVALID_PACKAGE)
             ensure(metadata["language"] == descriptor.headwordLanguage, OfflinePackError.INVALID_PACKAGE)
+            ensure(metadata["definition_language"] == descriptor.definitionLanguage, OfflinePackError.INVALID_PACKAGE)
             val integrity = db.rawQuery("PRAGMA integrity_check", null).use { cursor ->
                 if (cursor.moveToFirst()) cursor.getString(0) else "failed"
             }
@@ -220,6 +221,7 @@ class OfflinePackManager(private val context: Context) {
                         packId = item.getString("packId"),
                         version = item.getString("version"),
                         headwordLanguage = item.getString("headwordLanguage"),
+                        definitionLanguage = item.optString("definitionLanguage", item.getString("headwordLanguage")),
                         primaryEdition = item.getString("primaryEdition"),
                         displayName = item.getString("displayName"),
                         downloadBytes = item.getLong("downloadBytes"),
@@ -238,10 +240,10 @@ class OfflinePackManager(private val context: Context) {
     }
 
     companion object {
-        private const val SUPPORTED_SCHEMA = 1
+        private const val SUPPORTED_SCHEMA = 2
         private const val CONNECT_TIMEOUT_MS = 15_000
         private const val READ_TIMEOUT_MS = 30_000
         private const val SAFETY_MARGIN_BYTES = 16L * 1024L * 1024L
-        private const val USER_AGENT = "LinguaWiki/0.4 (Android offline dictionary)"
+        private const val USER_AGENT = "LinguaWiki/0.5 (Android offline dictionary)"
     }
 }

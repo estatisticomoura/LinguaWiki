@@ -12,8 +12,8 @@ android {
         applicationId = "org.linguawiki.offline"
         minSdk = 26
         targetSdk = 35
-        versionCode = 4
-        versionName = "0.4.0-prototype"
+        versionCode = 5
+        versionName = "0.5.0-prototype"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

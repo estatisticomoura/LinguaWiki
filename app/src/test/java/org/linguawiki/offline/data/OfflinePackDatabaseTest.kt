@@ -24,29 +24,31 @@ class OfflinePackDatabaseTest {
         file = File(context.cacheDir, "offline-pack-test.sqlite").also { it.delete() }
         SQLiteDatabase.openOrCreateDatabase(file, null).use { db ->
             db.execSQL(
-                "CREATE TABLE entries(id INTEGER PRIMARY KEY, stable_id TEXT, lemma TEXT, lemma_key TEXT, folded_key TEXT, part_of_speech TEXT, ipa TEXT, etymology TEXT, inflection_kind TEXT)",
+                "CREATE TABLE entries(id INTEGER PRIMARY KEY, stable_id TEXT, lemma TEXT, lemma_key TEXT, folded_key TEXT, part_of_speech TEXT, ipa TEXT, etymology TEXT, inflection_kind TEXT, grammatical_features_json TEXT, content_score INTEGER)",
             )
             db.execSQL(
                 "CREATE TABLE senses(id INTEGER PRIMARY KEY, entry_id INTEGER, sense_order INTEGER, definition TEXT, examples_json TEXT)",
             )
             db.execSQL(
-                "CREATE TABLE translations(id INTEGER PRIMARY KEY, sense_id INTEGER, language TEXT, term TEXT)",
+                "CREATE TABLE translations(id INTEGER PRIMARY KEY, entry_id INTEGER, sense_id INTEGER, sense_order INTEGER, sense_label TEXT, language_code TEXT, language_name TEXT, term TEXT, tags_json TEXT)",
             )
             db.execSQL(
-                "CREATE TABLE forms(id INTEGER PRIMARY KEY, entry_id INTEGER, surface TEXT, surface_key TEXT, folded_key TEXT, label TEXT)",
+                "CREATE TABLE forms(id INTEGER PRIMARY KEY, entry_id INTEGER, surface TEXT, surface_key TEXT, folded_key TEXT, label TEXT, tags_json TEXT, raw_tags_json TEXT)",
             )
+            db.execSQL("CREATE TABLE pronunciations(id INTEGER PRIMARY KEY, entry_id INTEGER, ipa TEXT, labels_json TEXT)")
             db.execSQL(
-                "INSERT INTO entries VALUES(1, 'poder-verb-1', 'poder', 'poder', 'poder', 'verb', '/pu.ˈdeɾ/', 'Do latim posse.', 'conjugation')",
+                "INSERT INTO entries VALUES(1, 'poder-verb-1', 'poder', 'poder', 'poder', 'verb', '/pu.ˈdeɾ/', 'Do latim posse.', 'conjugation', '[]', 10101)",
             )
             db.execSQL(
                 "INSERT INTO senses VALUES(10, 1, 1, 'ter capacidade', '[\"Eu posso ajudar.\",\"Pudesse eu voltar.\"]')",
             )
-            db.execSQL("INSERT INTO translations VALUES(20, 10, 'en', 'can')")
+            db.execSQL("INSERT INTO pronunciations VALUES(40, 1, '/pu.ˈdeɾ/', '[\"Brazil\"]')")
+            db.execSQL("INSERT INTO translations VALUES(20, 1, 10, 1, NULL, 'en', 'Inglês', 'can', '[]')")
             db.execSQL(
-                "INSERT INTO forms VALUES(30, 1, 'pudesse', 'pudesse', 'pudesse', 'singular, 1.ª pessoa, subjuntivo')",
+                "INSERT INTO forms VALUES(30, 1, 'pudesse', 'pudesse', 'pudesse', 'singular, 1.ª pessoa, subjuntivo', '[\"first-person\",\"singular\",\"subjunctive\"]', '[]')",
             )
             db.execSQL(
-                "INSERT INTO entries VALUES(2, 'coracao-noun-1', 'coração', 'coração', 'coracao', 'noun', NULL, NULL, 'declension')",
+                "INSERT INTO entries VALUES(2, 'coracao-noun-1', 'coração', 'coração', 'coracao', 'noun', NULL, NULL, 'declension', '[]', 1)",
             )
         }
         pack = OfflinePackDatabase(file, descriptor)

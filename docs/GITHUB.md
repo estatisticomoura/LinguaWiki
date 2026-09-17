@@ -14,7 +14,7 @@ in their respective target languages.
 - **Actions** runs automated builds and tests after each update.
 - **Releases** distributes large files such as APKs and dictionary packages.
 
-The 39.6 MB compressed dictionary must not be committed to Git history. Attach
+The dictionary package must not be committed to Git history. Attach
 it to a Release instead.
 
 ## 2. Repository About metadata
@@ -49,21 +49,21 @@ To update the panel, open the repository, select the gear icon beside
 GitHub Actions artifacts are temporary. Use a Release for a stable public
 download.
 
-## 4. Create Release `v0.4.0-prototype`
+## 4. Create Release `v0.5.0-prototype`
 
 1. Open **Releases** on the repository page.
 2. Select **Draft a new release**.
-3. Under **Choose a tag**, enter `v0.4.0-prototype`.
-4. Select **Create new tag: v0.4.0-prototype on publish**.
+3. Under **Choose a tag**, enter `v0.5.0-prototype`.
+4. Select **Create new tag: v0.5.0-prototype on publish**.
 5. Confirm that the target branch is `main`.
-6. Set the release title to `LinguaWiki 0.4.0 prototype`.
+6. Set the release title to `LinguaWiki 0.5.0 prototype`.
 7. Paste the English release notes provided below.
 8. Select **Set as a pre-release** because this build is still experimental.
 9. Attach these four files without changing their names:
 
-   - `LinguaWiki-prototype-0.4.0-debug.apk`
-   - `linguawiki-pt-pt-2026-09-02.sqlite.gz`
-   - `pt-pt-2026-09-02.json`
+   - `LinguaWiki-prototype-0.5.0-debug.apk`
+   - `linguawiki-pt-pt-2026-09-17.sqlite.gz`
+   - `pt-pt-2026-09-17.json`
    - `NOTICE-DATA.md`
 
 10. Wait for every upload to finish.
@@ -72,15 +72,23 @@ download.
 The tag and dictionary filename are part of the URL bundled with the APK. A
 different tag or filename will break in-app package downloads.
 
-### Release notes for `v0.4.0-prototype`
+### Release notes for `v0.5.0-prototype`
 
 ```markdown
-First public LinguaWiki prototype with downloadable monolingual dictionary
-packages.
+Second LinguaWiki prototype with a rebuilt Portuguese monolingual package and
+improved offline and online lookup.
 
 ## Highlights
 
 - Portuguese–Portuguese offline dictionary downloaded on demand
+- translations grouped by sense, with full language names and all source terms
+- all available IPA records and structured inflection metadata
+- conjugation groups with explicit personal pronouns
+- grouped homographs ordered by entry content
+- online suggestions collapse after selection and remain closed when editions change
+- online Wiktionary audio controls are enabled
+- English Wiktionary links for Polish open the modern Polish section
+- the home search screen does not expose recent queries
 - search by lemma or inflected form
 - ambiguous-form support: `fui` resolves to both `ir` and `ser`
 - diacritic-insensitive matching: `coracoes` finds `coração`
@@ -94,9 +102,9 @@ packages.
 - 93,848 entries
 - 151,369 senses
 - 417,989 translations
-- 449,746 indexed forms
-- 39.6 MB compressed download
-- 120.8 MB installed
+- 852,150 indexed forms
+- 60,755,090-byte compressed download
+- 268,677,120 bytes installed
 
 This is an experimental build signed with a development key. Dictionary data
 is derived from the Portuguese Wiktionary and distributed under CC BY-SA 4.0.

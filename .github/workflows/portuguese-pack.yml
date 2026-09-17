@@ -1,0 +1,38 @@
+name: Portuguese dictionary package
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - tools/build_dictionary_pack.py
+      - .github/workflows/portuguese-pack.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - name: Download the Portuguese Kaikki extraction
+        run: curl --fail --location --retry 3 --output pt-extract.jsonl.gz https://kaikki.org/dictionary/downloads/pt/pt-extract.jsonl.gz
+      - name: Build and verify schema 2 package
+        run: |
+          python3 tools/build_dictionary_pack.py pt-extract.jsonl.gz build/linguawiki-pt-pt-2026-09-17.sqlite \
+            --edition pt --language pt --definition-language pt --pack-id pt-pt \
+            --version 2026-09-17 --dump-date 2026-09-17 --display-name Português \
+            --gzip-output build/linguawiki-pt-pt-2026-09-17.sqlite.gz \
+            --manifest build/pt-pt-2026-09-17.json \
+            --download-url https://github.com/estatisticomoura/LinguaWiki/releases/download/v0.5.0-prototype/linguawiki-pt-pt-2026-09-17.sqlite.gz
+          sqlite3 build/linguawiki-pt-pt-2026-09-17.sqlite 'PRAGMA integrity_check'
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: LinguaWiki-portuguese-package
+          path: |
+            build/linguawiki-pt-pt-2026-09-17.sqlite.gz
+            build/pt-pt-2026-09-17.json
+          if-no-files-found: error
