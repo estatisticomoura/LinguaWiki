@@ -63,6 +63,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -233,6 +234,7 @@ private fun MainScaffold(viewModel: MainViewModel, state: MainUiState) {
                     editions = viewModel.availableEditions,
                     onTheme = viewModel::setThemeMode,
                     onPalette = viewModel::setColorPalette,
+                    onHighColorContrast = viewModel::setHighColorContrast,
                     onFontScale = viewModel::setFontScale,
                     onLineSpacing = viewModel::setLineSpacing,
                     onEdition = viewModel::toggleOnlineEdition,
@@ -291,7 +293,7 @@ private fun SearchScreen(state: MainUiState, viewModel: MainViewModel) {
                     FilterChip(
                         selected = state.activeLanguage == language,
                         onClick = { viewModel.selectLanguage(language) },
-                        label = { Text("${flagForLanguage(language)} ${localizedLanguageName(language)}") },
+                        label = { Text(dictionaryDisplayLabel(language)) },
                     )
                 }
             }
@@ -451,6 +453,66 @@ private fun CollectionScreen(
     }
 }
 
+private enum class SettingsSection { APPEARANCE, OFFLINE, ONLINE }
+
+@Composable
+private fun SettingsLanding(onSection: (SettingsSection) -> Unit) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(horizontal = 18.dp, vertical = 20.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        item { Text(stringResource(R.string.settings), style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.SemiBold) }
+        item {
+            SettingsCategoryCard(
+                title = stringResource(R.string.theme),
+                description = stringResource(R.string.appearance_settings_desc),
+                onClick = { onSection(SettingsSection.APPEARANCE) },
+            )
+        }
+        item {
+            SettingsCategoryCard(
+                title = stringResource(R.string.offline_sources),
+                description = stringResource(R.string.offline_sources_desc),
+                onClick = { onSection(SettingsSection.OFFLINE) },
+            )
+        }
+        item {
+            SettingsCategoryCard(
+                title = stringResource(R.string.online_sources),
+                description = stringResource(R.string.online_sources_desc),
+                onClick = { onSection(SettingsSection.ONLINE) },
+            )
+        }
+        item {
+            HorizontalDivider(Modifier.padding(vertical = 8.dp))
+            SectionTitle(stringResource(R.string.privacy))
+            Text(stringResource(R.string.privacy_desc), color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        item {
+            SectionTitle(stringResource(R.string.prototype_data_title))
+            Text(stringResource(R.string.prototype_data_desc), color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+    }
+}
+
+@Composable
+private fun SettingsCategoryCard(title: String, description: String, onClick: () -> Unit) {
+    Card(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(18.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                Text(title, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold)
+                Text(description, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Text("›", style = MaterialTheme.typography.headlineMedium, color = MaterialTheme.colorScheme.primary)
+        }
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SettingsScreen(
@@ -458,6 +520,7 @@ private fun SettingsScreen(
     editions: List<OnlineEdition>,
     onTheme: (ThemeMode) -> Unit,
     onPalette: (ColorPalette) -> Unit,
+    onHighColorContrast: (Boolean) -> Unit,
     onFontScale: (FontScale) -> Unit,
     onLineSpacing: (LineSpacing) -> Unit,
     onEdition: (String) -> Unit,
@@ -466,6 +529,7 @@ private fun SettingsScreen(
     onDismissPackError: (String) -> Unit,
     requiredPeakBytes: (org.linguawiki.offline.data.OfflinePackDescriptor) -> Long,
 ) {
+    var selectedSection by rememberSaveable { mutableStateOf<SettingsSection?>(null) }
     var editionFilter by rememberSaveable { mutableStateOf("") }
     var pendingInstall by remember { mutableStateOf<OfflinePackState?>(null) }
     var pendingRemove by remember { mutableStateOf<OfflinePackState?>(null) }
@@ -479,20 +543,44 @@ private fun SettingsScreen(
             ).contains(filterKey)
         }
 
+    BackHandler(enabled = selectedSection != null) { selectedSection = null }
+    if (selectedSection == null) {
+        SettingsLanding(onSection = { selectedSection = it })
+        return
+    }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(horizontal = 18.dp, vertical = 20.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        item { Text(stringResource(R.string.settings), style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.SemiBold) }
+        item {
+            TextButton(onClick = { selectedSection = null }) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                Text(stringResource(R.string.settings), Modifier.padding(start = 6.dp))
+            }
+            Text(
+                stringResource(
+                    when (selectedSection) {
+                        SettingsSection.APPEARANCE -> R.string.theme
+                        SettingsSection.OFFLINE -> R.string.offline_sources
+                        SettingsSection.ONLINE -> R.string.online_sources
+                        null -> R.string.settings
+                    },
+                ),
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.SemiBold,
+            )
+        }
+        if (selectedSection == SettingsSection.APPEARANCE) {
         item { SectionTitle(stringResource(R.string.theme)) }
-        items(ThemeMode.entries) { mode ->
+        items(listOf(ThemeMode.SYSTEM, ThemeMode.LIGHT, ThemeMode.DARK)) { mode ->
             val label = when (mode) {
                 ThemeMode.SYSTEM -> stringResource(R.string.system_default)
                 ThemeMode.LIGHT -> stringResource(R.string.light)
                 ThemeMode.DARK -> stringResource(R.string.dark)
-                ThemeMode.HIGH_CONTRAST_LIGHT -> stringResource(R.string.high_contrast_light)
-                ThemeMode.HIGH_CONTRAST_DARK -> stringResource(R.string.high_contrast_dark)
+                ThemeMode.HIGH_CONTRAST_LIGHT -> stringResource(R.string.light)
+                ThemeMode.HIGH_CONTRAST_DARK -> stringResource(R.string.dark)
             }
             SettingChoice(label, selected = state.themeMode == mode, onClick = { onTheme(mode) })
         }
@@ -502,8 +590,21 @@ private fun SettingsScreen(
                 ColorPalette.GREEN -> stringResource(R.string.palette_green)
                 ColorPalette.BLUE -> stringResource(R.string.palette_blue)
                 ColorPalette.AMBER -> stringResource(R.string.palette_amber)
+                ColorPalette.PINK -> stringResource(R.string.palette_pink)
+                ColorPalette.PURPLE -> stringResource(R.string.palette_purple)
+                ColorPalette.TEAL -> stringResource(R.string.palette_teal)
+                ColorPalette.RED -> stringResource(R.string.palette_red)
             }
             SettingChoice(label, selected = state.colorPalette == palette, onClick = { onPalette(palette) })
+        }
+        item {
+            Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text(stringResource(R.string.high_color_contrast), style = MaterialTheme.typography.titleMedium)
+                    Text(stringResource(R.string.high_color_contrast_desc), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                Switch(checked = state.highColorContrast, onCheckedChange = onHighColorContrast)
+            }
         }
         item { SectionTitle(stringResource(R.string.font_size)) }
         items(FontScale.entries) { scale ->
@@ -522,6 +623,8 @@ private fun SettingsScreen(
             }
             SettingChoice(label, selected = state.lineSpacing == spacing, onClick = { onLineSpacing(spacing) })
         }
+        }
+        if (selectedSection == SettingsSection.OFFLINE) {
         item {
             Spacer(Modifier.height(6.dp))
             SectionTitle(stringResource(R.string.offline_sources))
@@ -545,6 +648,8 @@ private fun SettingsScreen(
                 )
             }
         }
+        }
+        if (selectedSection == SettingsSection.ONLINE) {
         item {
             Spacer(Modifier.height(6.dp))
             SectionTitle(stringResource(R.string.online_sources))
@@ -583,7 +688,7 @@ private fun SettingsScreen(
                     onCheckedChange = { onEdition(edition.code) },
                 )
                 Column(modifier = Modifier.padding(start = 8.dp)) {
-                    Text(editionDisplayLabel(edition, displayLocale))
+                    Text(onlineEditionDisplayLabel(edition, displayLocale))
                     Text(
                         edition.code.uppercase(Locale.ROOT),
                         style = MaterialTheme.typography.labelSmall,
@@ -595,14 +700,6 @@ private fun SettingsScreen(
         if (visibleEditions.isEmpty()) {
             item { InformationCard(stringResource(R.string.no_online_sources_match)) }
         }
-        item {
-            HorizontalDivider(Modifier.padding(vertical = 8.dp))
-            SectionTitle(stringResource(R.string.privacy))
-            Text(stringResource(R.string.privacy_desc), color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
-        item {
-            SectionTitle(stringResource(R.string.prototype_data_title))
-            Text(stringResource(R.string.prototype_data_desc), color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 
@@ -615,7 +712,7 @@ private fun SettingsScreen(
                 Text(
                     stringResource(
                         R.string.download_dictionary_confirmation,
-                        languageDisplayName(pack.descriptor.headwordLanguage, displayLocale),
+                        dictionaryDisplayLabel(pack.descriptor.headwordLanguage),
                         formatBytes(pack.descriptor.downloadBytes, displayLocale),
                         formatBytes(pack.descriptor.installedBytes, displayLocale),
                         formatBytes(requiredPeakBytes(pack.descriptor), displayLocale),
@@ -646,7 +743,7 @@ private fun SettingsScreen(
                 Text(
                     stringResource(
                         R.string.remove_dictionary_confirmation,
-                        languageDisplayName(pack.descriptor.headwordLanguage, displayLocale),
+                        dictionaryDisplayLabel(pack.descriptor.headwordLanguage),
                         formatBytes(pack.descriptor.installedBytes, displayLocale),
                     ),
                 )
@@ -680,7 +777,7 @@ private fun OfflinePackCard(
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
                     Text(
-                        "${flagForLanguage(pack.descriptor.headwordLanguage)} ${languageDisplayName(pack.descriptor.headwordLanguage, displayLocale)}",
+                        dictionaryDisplayLabel(pack.descriptor.headwordLanguage),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.SemiBold,
                     )
@@ -1232,7 +1329,7 @@ private fun OnlineScreen(
                     FilterChip(
                         selected = selected.code == edition.code,
                         onClick = { onEdition(edition.code) },
-                        label = { Text(editionDisplayLabel(edition, displayLocale)) },
+                        label = { Text(onlineEditionDisplayLabel(edition, displayLocale)) },
                     )
                 }
             }
@@ -1306,6 +1403,30 @@ private fun editionDisplayLabel(edition: OnlineEdition, displayLocale: Locale): 
     }
 }
 
+internal fun onlineEditionDisplayLabel(edition: OnlineEdition, displayLocale: Locale): String {
+    val flag = onlineFlagForLanguage(edition.code)
+    val label = editionDisplayLabel(edition, displayLocale)
+    return if (flag == null) label else flag + " " + label
+}
+
+internal fun dictionaryDisplayLabel(language: String): String =
+    flagForLanguage(language) + " " + nativeLanguageName(language)
+
+internal fun nativeLanguageName(language: String): String {
+    val overrides = mapOf(
+        "la" to "Latina",
+        "pt" to "Português",
+        "pl" to "Polski",
+        "en" to "English",
+        "es" to "Español",
+        "ku" to "Kurdî",
+    )
+    overrides[language]?.let { return it }
+    val locale = Locale.forLanguageTag(language.replace('_', '-'))
+    val raw = locale.getDisplayLanguage(locale).takeIf { it.isNotBlank() } ?: language.uppercase(Locale.ROOT)
+    return raw.replaceFirstChar { if (it.isLowerCase()) it.titlecase(locale) else it.toString() }
+}
+
 private fun languageDisplayName(language: String, displayLocale: Locale): String {
     val locale = Locale.forLanguageTag(language.replace('_', '-'))
     val raw = locale.getDisplayLanguage(displayLocale)
@@ -1314,11 +1435,36 @@ private fun languageDisplayName(language: String, displayLocale: Locale): String
     return raw.substring(0, 1).uppercase(displayLocale) + raw.substring(1)
 }
 
-private fun flagForLanguage(language: String): String = when (language) {
+internal fun flagForLanguage(language: String): String = when (language) {
     "en" -> "🇬🇧"
-    "pt" -> "🇧🇷"
+    "pt" -> "🇵🇹"
     "pl" -> "🇵🇱"
-    else -> "🌐"
+    "la" -> "🇻🇦"
+    "es" -> "🇪🇸"
+    "de" -> "🇩🇪"
+    "fr" -> "🇫🇷"
+    "it" -> "🇮🇹"
+    "nl" -> "🇳🇱"
+    "cs" -> "🇨🇿"
+    "ru" -> "🇷🇺"
+    "el" -> "🇬🇷"
+    "ar" -> "🇸🇦"
+    "zh" -> "🇨🇳"
+    "id" -> "🇮🇩"
+    "ja" -> "🇯🇵"
+    "ko" -> "🇰🇷"
+    "ku" -> "🇮🇶"
+    "ms" -> "🇲🇾"
+    "th" -> "🇹🇭"
+    "tr" -> "🇹🇷"
+    "vi" -> "🇻🇳"
+    else -> "🏳️"
+}
+
+internal fun onlineFlagForLanguage(language: String): String? = when (language) {
+    "en", "pt", "pl", "la", "es", "de", "fr", "it", "nl", "cs", "ru", "el",
+    "ar", "zh", "id", "ja", "ko", "ms", "th", "tr", "vi" -> flagForLanguage(language)
+    else -> null
 }
 
 private fun languageBadge(language: String): String = when (language) {

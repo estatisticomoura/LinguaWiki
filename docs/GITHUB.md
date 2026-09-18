@@ -96,6 +96,8 @@ improved offline and online lookup.
 - resumable download with SHA-256 and SQLite integrity verification
 - atomic package installation and independent removal
 - configurable font size, line spacing, color palette, and high contrast
+- three focused settings areas for appearance, offline dictionaries, and online editions
+- dictionary selectors with representative flags and native language names
 
 ## Portuguese package
 

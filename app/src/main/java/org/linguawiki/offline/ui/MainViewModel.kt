@@ -58,6 +58,7 @@ data class MainUiState(
     val onlineEditions: Set<String> = setOf("en", "pt"),
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val colorPalette: ColorPalette = ColorPalette.GREEN,
+    val highColorContrast: Boolean = false,
     val fontScale: FontScale = FontScale.DEFAULT,
     val lineSpacing: LineSpacing = LineSpacing.STANDARD,
     val offlinePacks: List<OfflinePackState> = emptyList(),
@@ -71,13 +72,24 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val preferences = application.getSharedPreferences(PREFERENCES, 0)
     private val packageDatabases = mutableMapOf<String, OfflinePackDatabase>()
     private val suggestionCache = linkedMapOf<String, List<OnlineSuggestion>>()
+    private val storedThemeMode = enumPreference(KEY_THEME, ThemeMode.SYSTEM, ThemeMode::valueOf)
+    private val initialThemeMode = when (storedThemeMode) {
+        ThemeMode.HIGH_CONTRAST_LIGHT -> ThemeMode.LIGHT
+        ThemeMode.HIGH_CONTRAST_DARK -> ThemeMode.DARK
+        else -> storedThemeMode
+    }
+    private val initialHighColorContrast =
+        preferences.getBoolean(KEY_HIGH_COLOR_CONTRAST, false) ||
+            storedThemeMode == ThemeMode.HIGH_CONTRAST_LIGHT ||
+            storedThemeMode == ThemeMode.HIGH_CONTRAST_DARK
 
     private val _state = MutableStateFlow(
         MainUiState(
             onlineEditions = preferences.getStringSet(KEY_EDITIONS, setOf("en", "pt"))?.toSet()
                 ?: setOf("en", "pt"),
-            themeMode = enumPreference(KEY_THEME, ThemeMode.SYSTEM, ThemeMode::valueOf),
+            themeMode = initialThemeMode,
             colorPalette = enumPreference(KEY_PALETTE, ColorPalette.GREEN, ColorPalette::valueOf),
+            highColorContrast = initialHighColorContrast,
             fontScale = enumPreference(KEY_FONT_SCALE, FontScale.DEFAULT, FontScale::valueOf),
             lineSpacing = enumPreference(KEY_LINE_SPACING, LineSpacing.STANDARD, LineSpacing::valueOf),
             offlinePacks = packManager.initialStates(),
@@ -251,6 +263,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun setColorPalette(palette: ColorPalette) {
         preferences.edit().putString(KEY_PALETTE, palette.name).apply()
         _state.update { it.copy(colorPalette = palette) }
+    }
+
+    fun setHighColorContrast(enabled: Boolean) {
+        preferences.edit().putBoolean(KEY_HIGH_COLOR_CONTRAST, enabled).apply()
+        _state.update { it.copy(highColorContrast = enabled) }
     }
 
     fun setFontScale(scale: FontScale) {
@@ -536,6 +553,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         private const val KEY_EDITIONS = "online_editions"
         private const val KEY_THEME = "theme_mode"
         private const val KEY_PALETTE = "color_palette"
+        private const val KEY_HIGH_COLOR_CONTRAST = "high_color_contrast"
         private const val KEY_FONT_SCALE = "font_scale"
         private const val KEY_LINE_SPACING = "line_spacing"
         private const val MAX_SUGGESTION_CACHE = 40

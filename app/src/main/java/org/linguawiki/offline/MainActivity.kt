@@ -18,6 +18,7 @@ class MainActivity : ComponentActivity() {
             LinguaWikiTheme(
                 themeMode = state.themeMode,
                 colorPalette = state.colorPalette,
+                highColorContrast = state.highColorContrast,
                 fontScale = state.fontScale,
                 lineSpacing = state.lineSpacing,
             ) {

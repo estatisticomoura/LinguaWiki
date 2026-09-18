@@ -50,6 +50,18 @@ class OfflinePackDatabaseTest {
             db.execSQL(
                 "INSERT INTO entries VALUES(2, 'coracao-noun-1', 'coração', 'coração', 'coracao', 'noun', NULL, NULL, 'declension', '[]', 1)",
             )
+            db.execSQL(
+                "INSERT INTO entries VALUES(3, 'ir-verb-1', 'ir', 'ir', 'ir', 'verb', NULL, NULL, 'conjugation', '[]', 200)",
+            )
+            db.execSQL(
+                "INSERT INTO entries VALUES(4, 'ser-verb-1', 'ser', 'ser', 'ser', 'verb', NULL, NULL, 'conjugation', '[]', 220)",
+            )
+            db.execSQL(
+                "INSERT INTO forms VALUES(31, 3, 'fui', 'fui', 'fui', '1.ª pessoa, singular, indicativo, pretérito', '[\"first-person\",\"singular\",\"indicative\",\"past\"]', '[]')",
+            )
+            db.execSQL(
+                "INSERT INTO forms VALUES(32, 4, 'fui', 'fui', 'fui', '1.ª pessoa, singular, indicativo, pretérito', '[\"first-person\",\"singular\",\"indicative\",\"past\"]', '[]')",
+            )
         }
         pack = OfflinePackDatabase(file, descriptor)
     }
@@ -73,6 +85,12 @@ class OfflinePackDatabaseTest {
         val result = pack.search("coracao").first()
         assertEquals("coração", result.lemma)
         assertEquals(MatchKind.DIACRITIC, result.matchKind)
+    }
+
+    @Test
+    fun `ambiguous conjugated form returns both lemmas`() {
+        val lemmas = pack.search("fui").map { it.lemma }.toSet()
+        assertEquals(setOf("ir", "ser"), lemmas)
     }
 
     @Test

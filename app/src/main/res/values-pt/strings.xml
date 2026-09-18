@@ -32,6 +32,7 @@
     <string name="online_open_entry">Abrir verbete</string>
     <string name="online_suggestion_approximate">Correspondência aproximada</string>
     <string name="theme">Aparência</string>
+    <string name="appearance_settings_desc">Tema, tamanho da fonte, entrelinha, paleta e contraste das cores.</string>
     <string name="system_default">Seguir o sistema</string>
     <string name="light">Claro</string>
     <string name="dark">Escuro</string>
@@ -41,6 +42,12 @@
     <string name="palette_green">Verde</string>
     <string name="palette_blue">Azul</string>
     <string name="palette_amber">Âmbar</string>
+    <string name="palette_pink">Rosa</string>
+    <string name="palette_purple">Roxo</string>
+    <string name="palette_teal">Verde-azulado</string>
+    <string name="palette_red">Vermelho</string>
+    <string name="high_color_contrast">Alto contraste de cor</string>
+    <string name="high_color_contrast_desc">Usar cores mais fortes e saturadas na paleta.</string>
     <string name="font_size">Tamanho da fonte</string>
     <string name="font_size_percent">%1$d%%</string>
     <string name="line_spacing">Entrelinha</string>

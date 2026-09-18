@@ -1,8 +1,8 @@
 # LinguaWiki — offline dictionaries and online Wiktionary
 
 LinguaWiki is an Android dictionary app with no account requirement, ads,
-telemetry, or tracking. Its interface follows the device language and is
-has complete English, Italian, and Portuguese resources; its initial search
+telemetry, or tracking. Its interface follows the device language and has
+complete English, Italian, and Portuguese resources; its initial search
 copy is also localized for the 17 other Kaikki source languages supported in
 this phase.
 
@@ -31,9 +31,13 @@ and localized app strings remain in their respective languages.
 - online lookup across 173 active Wiktionary editions;
 - online suggestions using prefix search, approximate search, and diacritic
   variants;
-- system, light, dark, and high-contrast themes;
-- green, blue, and amber color palettes;
+- three focused settings areas: Appearance, Offline dictionaries, and Online
+  editions;
+- system, light, and dark themes, plus an independent stronger-color switch;
+- green, blue, amber, pink, purple, teal, and red color palettes;
 - five font sizes and three line-spacing options.
+- dictionary selectors use a representative flag and each language's native
+  name; online editions add a flag only where a sensible representative exists.
 
 ## Portuguese–Portuguese package
 
