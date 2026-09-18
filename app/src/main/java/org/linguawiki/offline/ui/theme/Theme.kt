@@ -22,19 +22,29 @@ private data class PaletteColors(
     val darkContainer: Color,
 )
 
-private fun paletteColors(palette: ColorPalette) = when (palette) {
-    ColorPalette.GREEN -> PaletteColors(
-        Color(0xFF365E55), Color(0xFFB9EBDD), Color(0xFF9DD0C2), Color(0xFF204E45),
-    )
-    ColorPalette.BLUE -> PaletteColors(
-        Color(0xFF315E8A), Color(0xFFD2E4FF), Color(0xFFA4CAFA), Color(0xFF174A72),
-    )
-    ColorPalette.AMBER -> PaletteColors(
-        Color(0xFF775A00), Color(0xFFFFE08A), Color(0xFFFFD95C), Color(0xFF5B4300),
-    )
+private fun paletteColors(palette: ColorPalette, vivid: Boolean): PaletteColors {
+    val soft = when (palette) {
+        ColorPalette.GREEN -> PaletteColors(Color(0xFF365E55), Color(0xFFB9EBDD), Color(0xFF9DD0C2), Color(0xFF204E45))
+        ColorPalette.BLUE -> PaletteColors(Color(0xFF315E8A), Color(0xFFD2E4FF), Color(0xFFA4CAFA), Color(0xFF174A72))
+        ColorPalette.AMBER -> PaletteColors(Color(0xFF775A00), Color(0xFFFFE08A), Color(0xFFFFD95C), Color(0xFF5B4300))
+        ColorPalette.PINK -> PaletteColors(Color(0xFF8A4D68), Color(0xFFFFD9E7), Color(0xFFFFB1CD), Color(0xFF6E284B))
+        ColorPalette.PURPLE -> PaletteColors(Color(0xFF68527E), Color(0xFFEBDDF8), Color(0xFFD8BDF0), Color(0xFF4E3565))
+        ColorPalette.TEAL -> PaletteColors(Color(0xFF27676B), Color(0xFFBCEBEA), Color(0xFF91D7D7), Color(0xFF084F53))
+        ColorPalette.RED -> PaletteColors(Color(0xFF8A4A48), Color(0xFFFFDAD7), Color(0xFFFFB4AF), Color(0xFF702F2D))
+    }
+    if (!vivid) return soft
+    return when (palette) {
+        ColorPalette.GREEN -> PaletteColors(Color(0xFF006B45), Color(0xFF72FFC1), Color(0xFF4CFFA8), Color(0xFF00784F))
+        ColorPalette.BLUE -> PaletteColors(Color(0xFF0057C8), Color(0xFF8DBBFF), Color(0xFF5AA1FF), Color(0xFF0064E7))
+        ColorPalette.AMBER -> PaletteColors(Color(0xFF6A4B00), Color(0xFFFFC400), Color(0xFFFFC400), Color(0xFF765500))
+        ColorPalette.PINK -> PaletteColors(Color(0xFFC60067), Color(0xFFFF8DC0), Color(0xFFFF5BA8), Color(0xFFD80070))
+        ColorPalette.PURPLE -> PaletteColors(Color(0xFF6F22B8), Color(0xFFD99BFF), Color(0xFFC66BFF), Color(0xFF812DCE))
+        ColorPalette.TEAL -> PaletteColors(Color(0xFF007078), Color(0xFF55F4F1), Color(0xFF22D9DA), Color(0xFF007E87))
+        ColorPalette.RED -> PaletteColors(Color(0xFFB7191C), Color(0xFFFF938D), Color(0xFFFF625D), Color(0xFFC92325))
+    }
 }
 
-private fun lightColors(palette: ColorPalette) = paletteColors(palette).let { colors ->
+private fun lightColors(palette: ColorPalette, vivid: Boolean) = paletteColors(palette, vivid).let { colors ->
     lightColorScheme(
         primary = colors.lightPrimary,
         onPrimary = Color.White,
@@ -47,7 +57,7 @@ private fun lightColors(palette: ColorPalette) = paletteColors(palette).let { co
     )
 }
 
-private fun darkColors(palette: ColorPalette) = paletteColors(palette).let { colors ->
+private fun darkColors(palette: ColorPalette, vivid: Boolean) = paletteColors(palette, vivid).let { colors ->
     darkColorScheme(
         primary = colors.darkPrimary,
         onPrimary = Color(0xFF06241D),
@@ -92,6 +102,7 @@ private val HighContrastDark = darkColorScheme(
 fun LinguaWikiTheme(
     themeMode: ThemeMode,
     colorPalette: ColorPalette,
+    highColorContrast: Boolean,
     fontScale: FontScale,
     lineSpacing: LineSpacing,
     content: @Composable () -> Unit,
@@ -104,7 +115,7 @@ fun LinguaWikiTheme(
     val colors = when (themeMode) {
         ThemeMode.HIGH_CONTRAST_LIGHT -> HighContrastLight
         ThemeMode.HIGH_CONTRAST_DARK -> HighContrastDark
-        else -> if (dark) darkColors(colorPalette) else lightColors(colorPalette)
+        else -> if (dark) darkColors(colorPalette, highColorContrast) else lightColors(colorPalette, highColorContrast)
     }
     val density = LocalDensity.current
     CompositionLocalProvider(

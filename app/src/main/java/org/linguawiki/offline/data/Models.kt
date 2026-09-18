@@ -79,6 +79,10 @@ enum class ColorPalette {
     GREEN,
     BLUE,
     AMBER,
+    PINK,
+    PURPLE,
+    TEAL,
+    RED,
 }
 
 enum class FontScale(val multiplier: Float) {
